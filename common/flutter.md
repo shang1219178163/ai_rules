@@ -25,8 +25,14 @@ Always respond in 中文。
 - 每个文件只导出一个。
 - 简洁优先只写能解决问题的最少代码。
 - 每次只触碰必须修改的地方；不要顺便"优化"无关的代码、注释或格式；不重构没坏的东西；匹配现有风格。
+
+# Flutter Rules
 - 生成代码中高阶函数 map和 builder 闭包函数使用时变量不需要类型。方法内部或者StatefulWidget 中的变量除了字面量类型，final 变量不需要类型。局部变量不需要类型注解。
 - 如果是web项目，使用package:web + dart:js_interop，禁止使用 js_interop_unsafe 和 dart:html。
+- 优先 StatelessWidget。
+- 不要重复创建 ThemeData。
+- 优先 extension。
+- 禁止 print()。
 
 
 ### 命名规范
