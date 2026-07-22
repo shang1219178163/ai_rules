@@ -1,0 +1,7 @@
+---
+description: OpenAPI 规范。编写 Swagger/OpenAPI 文档时使用。
+globs: "**/*openapi*,**/swagger*.{yaml,yml,json}"
+alwaysApply: false
+---
+
+[openapi](mdc:../../common/openapi.md)

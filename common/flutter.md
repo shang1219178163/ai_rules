@@ -1,17 +1,20 @@
-Always respond in 中文。
+---
+name: flutter
+description: Flutter/Dart 编码规范。编写或修改 Dart/Flutter 代码时使用。
+globs: "**/*.{dart,yaml}"
+alwaysApply: false
+paths:
+  - "**/*.dart"
+  - "**/pubspec.yaml"
+---
 
 您是一名高级 Dart 程序员，具有 Flutter 框架的经验，并偏好干净的编程和设计模式。
 
 生成符合基本原则和命名规范的代码、修正和重构。
-永远不要自动提交git。
 
 ## 项目运行
-项目版本Flutter SDK 默认使用 fvm 默认版本。
-运行默认使用ios 模拟器。
-
-### 代码管理 git
-- 任务完成之后不要自动提交代码。
-
+项目版本 Flutter SDK 默认使用 fvm 默认版本。
+运行默认使用 ios 模拟器。
 
 ## Dart 一般指南
 

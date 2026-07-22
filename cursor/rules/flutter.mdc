@@ -1,5 +1,5 @@
 ---
-description: Flutter / Dart 编码规范与项目约定
+description: Flutter/Dart 编码规范。编写或修改 Dart/Flutter 代码时使用。
 globs: "**/*.{dart,yaml}"
 alwaysApply: false
 ---

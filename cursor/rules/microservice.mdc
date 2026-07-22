@@ -1,0 +1,6 @@
+---
+description: 微服务规范。设计服务拆分、编排或治理相关代码时使用。
+alwaysApply: false
+---
+
+[microservice](mdc:../../common/microservice.md)

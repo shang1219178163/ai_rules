@@ -1,1 +1,1 @@
-../common/flutter.md
+../common/core.md

@@ -1,0 +1,7 @@
+---
+description: REST API 设计规范。设计或修改 HTTP API 时使用。
+globs: "**/*.{yaml,yml,json}"
+alwaysApply: false
+---
+
+[api](mdc:../../common/api.md)

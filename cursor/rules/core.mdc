@@ -1,0 +1,6 @@
+---
+description: 全局约定：中文回复、禁止自动提交
+alwaysApply: true
+---
+
+[core](mdc:../../common/core.md)

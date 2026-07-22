@@ -1,0 +1,7 @@
+---
+description: 日志规范。添加或调整应用日志时使用。
+globs: "**/*log*"
+alwaysApply: false
+---
+
+[logging](mdc:../../common/logging.md)

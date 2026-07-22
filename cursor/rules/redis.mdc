@@ -1,0 +1,7 @@
+---
+description: Redis 规范。编写缓存、分布式锁或 Redis 相关代码时使用。
+globs: "**/*redis*"
+alwaysApply: false
+---
+
+[redis](mdc:../../common/redis.md)

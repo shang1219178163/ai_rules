@@ -1,0 +1,7 @@
+---
+description: gRPC 规范。编写或修改 .proto / gRPC 服务时使用。
+globs: "**/*.proto"
+alwaysApply: false
+---
+
+[grpc](mdc:../../common/grpc.md)

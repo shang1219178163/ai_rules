@@ -1,0 +1,7 @@
+---
+description: Docker/K8s 规范。编写 Dockerfile、compose 或 K8s 清单时使用。
+globs: "**/Dockerfile*,**/docker-compose*.{yml,yaml},**/*.{dockerfile},**/k8s/**/*.yaml"
+alwaysApply: false
+---
+
+[docker](mdc:../../common/docker.md)

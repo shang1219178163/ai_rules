@@ -1,0 +1,7 @@
+---
+description: 安全规范。处理认证授权、敏感数据或安全相关改动时使用。
+globs: "**/*{auth,security,crypto}*"
+alwaysApply: false
+---
+
+[security](mdc:../../common/security.md)
