@@ -26,15 +26,6 @@ Always respond in 中文。
 - 简洁优先只写能解决问题的最少代码。
 - 每次只触碰必须修改的地方；不要顺便"优化"无关的代码、注释或格式；不重构没坏的东西；匹配现有风格。
 
-# Flutter Rules
-- 生成代码中高阶函数 map和 builder 闭包函数使用时变量不需要类型。方法内部或者StatefulWidget 中的变量除了字面量类型，final 变量不需要类型。局部变量不需要类型注解。
-- 如果是web项目，使用package:web + dart:js_interop，禁止使用 js_interop_unsafe 和 dart:html。
-- 优先 StatelessWidget。
-- 不要重复创建 ThemeData。
-- 优先 extension。
-- 禁止 print()。
-
-
 ### 命名规范
 
 - 类使用 PascalCase。
@@ -136,13 +127,13 @@ Always respond in 中文。
 - 禁止贴图，优先使用 Flutter 内置组件并创建自定义组件。不规则组件可以通过绘制实现。
 - 使用 LayoutBuilder 或 MediaQuery 实现响应式设计。
 - 使用主题 ThemeData 以保持应用一致的样式。凡是涉及主题色变化的修改优先使用 ThemeData 实现。
-- 不是必须禁止使用 Stack 和 Positioned 组件。
+- 非必须禁止使用 Stack 和 Positioned 组件。优先使用 Container 的 decoration 的 image 属性显示背景图。
 - 返回 Widget 的私有方法不需要下换线开头。
 - 同类多状态值统一使用枚举 enum 封装，枚举子项都要添加中文注释。
 - 代码中使用 map 等高阶函数中不需要声明类型。
 - 调整完UI帮我 hot reload。
 
-### Flutter 组件：
+### Flutter Rules
 
 - 组件封装思路: 应该遵守高内聚，低耦合，高复用，可扩展，已维护的特点。
 - 遵循编码习惯: 参考 lib/pages 目录下其他业务界面的编码风格。非必须不使用 Stack 和 Positioned 组件。
@@ -151,6 +142,12 @@ Always respond in 中文。
 - 组件宽度: 组件宽度应自适应，避免设置固定宽度。
 - 修改内容: 将生成的内容整合到当前代码文档中。
 - 代码注释: 在代码中添加详细注释，以便后续维护和理解。
+- 生成代码中高阶函数 map和 builder 闭包函数使用时变量不需要类型。方法内部或者StatefulWidget 中的变量除了字面量类型，final 和本地变量都不需要类型注解。
+- 如果是web项目，使用package:web + dart:js_interop，禁止使用 js_interop_unsafe 和 dart:html。
+- 优先 StatelessWidget。
+- 不要重复创建 ThemeData。
+- 优先 extension。
+- 禁止 print()。
 
 ### 文档
 
