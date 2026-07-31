@@ -89,6 +89,7 @@ The script rebuilds `claude/`, `codex/`, and `cursor/rules/` from `common/` fron
 - has `globs` → Cursor file-scoped rule; otherwise agent-requested
 - Codex: `AGENTS.md` → `core`; every other module → `skills/<name>/SKILL.md` symlink
 
+**Pre-commit:** `.git_hooks/pre-commit` runs `sync_common.py` before every commit and stages the refreshed adapters. This repo expects `core.hooksPath=.git_hooks` (already set in your global git config). Manual sync is optional but still useful for a dry-run.
 ---
 
 ## 中文
@@ -171,3 +172,5 @@ Codex **不支持** `@` 展开；always-on 与 skills 请用符号链接。
 - 无 `paths` → Claude Skill
 - 有 `globs` → Cursor 按文件触发；否则 Agent 按需选用
 - Codex：`AGENTS.md` → `core`；其余模块 → `skills/<name>/SKILL.md` 符号链接
+
+**提交前自动同步：** `.git_hooks/pre-commit` 会在每次 `git commit` 前执行 `sync_common.py`，并把更新后的挂载文件重新 `git add`。本机需使用 `core.hooksPath=.git_hooks`（你的全局 git 已配置）。平时仍可手动跑脚本做 `--dry-run`。

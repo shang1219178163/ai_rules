@@ -1,0 +1,27 @@
+#!/bin/sh
+# 提交前根据 common/ 同步 Claude / Codex / Cursor 挂载层，并重新加入暂存区。
+set -e
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+
+# 仅当本次提交涉及 common，或挂载层相对 common 可能过期时同步。
+# 为简单可靠：有 common 变更则同步；否则也跑一遍（幂等，无改动则很快）。
+if git diff --cached --name-only --diff-filter=ACMR | grep -qE '^common/'; then
+  echo "[pre-commit] common/ changed → sync_common"
+else
+  echo "[pre-commit] sync_common (ensure adapters up to date)"
+fi
+
+python3 scripts/sync_common.py
+
+# 将同步产生的挂载文件纳入本次提交
+git add \
+  claude/CLAUDE.md \
+  claude/rules \
+  claude/skills \
+  codex/AGENTS.md \
+  codex/skills \
+  cursor/rules
+
+exit 0
