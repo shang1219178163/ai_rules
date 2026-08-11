@@ -4,128 +4,128 @@ description: Objective-C / UIKit 编码规范。编写或修改 ObjC、UIKit、�
 globs: "**/*.{h,m,mm}"
 alwaysApply: false
 paths:
-  - "**/*.{h,m,mm}"
+  - "**/*.h"
+  - "**/*.m"
+  - "**/*.mm"
   - "**/*.pch"
-  - "**/*.pbxproj"
   - "**/Podfile"
   - "**/Podfile.lock"
 ---
 
 您是一名 Objective-C / UIKit 专家级程序员，具有 iOS App 架构设计经验，并偏好干净的编程和设计模式。
 
-生成符合基本原则和命名规范的代码、修正和重构。通用原则（中文回复、禁止自动 git commit、少改少抽象、外科手术式修改）见 `common/core.md`，此处不重复。
+生成符合 Cocoa / Cocoa Touch 与 Apple 最佳实践的代码。通用原则（中文回复、禁止自动 git commit、少改少抽象、外科手术式修改）见 `common/core.md`，此处不重复。横切安全 / 日志 / 性能 / 测试见 `common/shared/`，此处只写 ObjC 特有约束。
+
+目标：可编译无警告、ARC + Nullability、可维护、可测；优先官方 API 与项目既有代码，不随意改公共 API，不引入无必要第三方依赖。
 
 ## 运行与工具
 
-- Xcode 默认使用项目当前选中的 Scheme / Destination；优先 iOS 模拟器。
-- 有 CocoaPods 的工程用 `.xcworkspace` 打开与编译，不要只用 `.xcodeproj`（除非项目明确无 Pod）。
-- 改完相关 `.h` / `.m` 后尽量编译验证；新增资源、改 `Info.plist` / 工程配置 / `PrefixHeader.pch` 后提醒完整 Rebuild。
-- 依赖变更后提醒 `pod install`（或项目既有依赖命令）并重新编译。
+- Xcode 用当前 Scheme / Destination；优先当前已选择的设备，若未选择则优先 iOS 模拟器。
+- 有 CocoaPods 时用 `.xcworkspace` 编译，不要只用 `.xcodeproj`（除非项目无 Pod）。
+- 改完相关 `.h` / `.m` 后尽量编译验证；改资源 / `Info.plist` / `PrefixHeader.pch` / 工程配置后提醒完整 Rebuild。
+- 依赖变更后提醒 `pod install`（或项目既有命令）并重新编译。
+- 格式与静态检查优先项目既有流程；可用 `clang-format`、`clang-tidy`、Xcode Static Analyzer、`XCTest`。
 
 ## Objective-C 语言
 
 ### 基本原则
 
-- 所有代码注释和文档使用中文。
-- 实现保持精简；删除纯转发方法，必要时重命名。
-- 禁止用 `NSLog` / `printf` 打业务日志；使用项目既有日志（如 `DDLog` / 自定义宏）。调试临时输出须在交付前去掉或改为正式日志。
+- 注释与文档用中文；实现精简，删除纯转发方法。
+- 业务日志禁止 `NSLog` / `printf`；用项目既有日志（如 `DDLog`）。生产日志禁止 Token / 密码 / 敏感用户信息（详见 `shared/logging.md`）。
 
-### 文件与格式
+### 文件与头文件
 
 - 不要在方法内部留空行（与项目既有风格冲突时服从项目）。
-- 一个 `.h` / `.m` 对优先对应一个主要公共类型；分类（Category）文件名与项目既有风格一致（如 `Class+Helper.h/.m`）。
-- 对外 API 放在 `.h`；实现细节、私有属性与方法放在 `.m` 的 class extension（`@interface Foo ()`）中。
-- `#import`：系统 / 第三方框架用 `<>` 或项目既有写法；同模块头文件用 `""`；能前向声明（`@class` / `@protocol`）就不要在头文件里过度 `#import`。
+- 文件名 PascalCase，与类型名一致（`UserManager.h/.m`）；Category：`Class+Role.h/.m`（如 `NSString+NXExtension`），避免 `NSObject+Common` 这类大杂烩。
+- 一个 `.h/.m` 对优先一个主要公共类型；对外 API 在 `.h`，私有属性 / 方法在 `.m` 的 class extension。
+- **头文件最小暴露**：`.h` 能 `@class` / `@protocol` 前向声明就不要 `#import` 实现头；`#import` 放 `.m`，减少编译依赖与循环引用。
+- 系统 / 第三方用项目既有 `#import` 风格；PCH 仅放真正全局稳定的导入，勿塞业务头文件。
 
-### 类型与空安全
+### 命名
 
-- 方法参数、返回值、属性尽量写清类型与泛型（如 `NSArray<NSString *> *`）；避免无必要的 `id`。
-- 对外可为 nil 的引用使用可空性注解：`nullable` / `nonnull`，或文件级 `NS_ASSUME_NONNULL_BEGIN` / `END` 后局部标 `nullable`。
-- Block 属性用 `copy`；注意循环引用，该 `weak` / `strong` 配对（`@weakify` / `@strongify` 若项目已有则沿用）。
+- 类 / 协议：PascalCase + 项目前缀（与仓库一致，如 `NN` / `NX`）；忌用无意义的裸名 `Manager` / `Helper` / `Tool` / `Common`。
+- 方法：Cocoa 语序驼峰（`loadUserWithIdentifier:`），勿写成 `getUser:` 这类含糊命名。
+- 布尔：`is` / `has` / `should` / `can` / `enable`（如 `isLoading`）；忌 `loading`。
+- 常量用项目既有风格（`kXxx`、`static NSString * const`）；状态用 `NS_ENUM` / `NS_OPTIONS`，忌魔法整数。
+- 完整单词优先；允许 API、URL、UUID 及 `i`/`j`/`err`/`ctx` 等惯用缩写。
 
-### 命名规范
+### 属性与 Nullability
 
-- 类 / 协议：PascalCase，并带项目前缀（如 `NN` / `WHK`，与仓库一致）；分类名：`ClassName+CategoryName`。
-- 方法：小写开头的驼峰，遵循 Cocoa 语序（`tableView:cellForRowAtIndexPath:`）；布尔用 `isX` / `hasX` / `canX` 或 Cocoa 惯用（`shouldX`）。
-- 常量：项目既有风格（`kXxx`、`static NSString * const` 等）；避免魔法数字，用有意义的常量或枚举。
-- 枚举优先 `NS_ENUM` / `NS_OPTIONS`，不用裸整数魔法值表达业务状态。
-- 使用完整单词；允许 API、URL、UUID，以及循环 `i`/`j`、`err`、`ctx` 等惯用缩写。
+- 语义：`copy`（`NSString` / 不可变集合 / Block）、`weak`（delegate）、`strong`（一般对象）、`assign`（标量 / 枚举）。
+- Block 属性必须 `copy`；delegate / 协议回调对象禁止 `strong`（须 `weak`）。
+- 新代码用 `NS_ASSUME_NONNULL_BEGIN/END`，可为 nil 处标 `nullable`；集合尽量写泛型（`NSArray<NSString *> *`），避免无必要 `id`。
 
-### 方法
+### 方法与初始化
 
-- 短小、单一职责。
-- 返回布尔：`isX` / `hasX` / `canX`；无返回值副作用动作用清晰动词（`save` / `load` / `update` 等）。
-- 提前返回，避免深嵌套；复杂逻辑提取工具方法或 Category。
-- 优先使用项目已有的集合高阶 API（如 `map` / `filter` / `reduce` / `forEach` / `compactMap`，见 `NNCategoryPro` 等），避免手写重复遍历；简单逻辑可用短 Block，否则提取具名方法。
-- 多返回值用自定义模型或字典时须约定键名与类型；对外 API 优先具名类型。
-- 保持单一抽象级别。
+- 短小、单一职责、单一抽象级别；提前返回；复杂逻辑提取方法或 Category。
+- 优先项目既有集合高阶 API（`map` / `filter` / `reduce` / `forEach` / `compactMap` 等），避免重复手写遍历；简单用短 Block，否则具名方法。
+- 重复 Block 签名用 `typedef`（如 `typedef void (^NXCompletionBlock)(BOOL success);`）；`typedef` 放文件顶部或公共头。
+- 多返回值 / 多参数对外 API 优先具名类型，少用散落字典约定。
+- 指定初始化：`init` / `initWith…` 返回 `instancetype`；`self = [super init…]` 后再配置；禁止 `- (void)init`。
+- UIView 统一 `setupUI`（或项目既有命名）完成子视图搭建。
 
-### 数据与类
+### ARC 与循环引用
 
-- 少用裸原始类型堆业务含义；封装成模型类或结构清晰的字典约定。
-- 校验放在模型构造 / 工厂方法里，避免在散落方法里重复校验。
-- 属性语义正确：`copy`（`NSString` / Block）、`strong` / `weak`（委托用 `weak`）、`assign`（基本类型与枚举）。
-- 优先组合而非继承；用 `@protocol` 表达契约。
-- 可复用逻辑优先 Category / 工具类，与项目既有分层一致。
-- 小型类型、功能单一；需要序列化时与项目既有方案对齐（手工字典、`NSCoding`、YYModel / MJExtension 等），字段与 key 对齐清晰。
+- 默认 ARC；禁止 `retain` / `release` / `autorelease` 与手动内存管理。
+- Block 捕获 `self`：`__weak typeof(self) weakSelf = self;`，执行时 `__strong typeof(weakSelf) strongSelf = weakSelf;`（或项目 `@weakify` / `@strongify`）。
+- 单例用 `dispatch_once` + `sharedInstance`（或项目既有写法）；勿滥用单例塞业务状态。
 
-### 错误处理
+### 错误与模型
 
-- 可恢复失败优先 `NSError **` 出参或项目既有 Result / 回调约定；勿忽略 `NSError`。
-- 回调 / Block 中处理失败须：提示用户、打日志或向上传递；禁止空实现吞掉错误。
+- 可恢复失败用 `NSError **` 或项目既有回调约定；勿静默 `return nil` / 空实现吞错。
+- 业务层用模型对象承载数据（映射 / 默认值 / 校验在模型或工厂）；勿让裸 `NSDictionary` 贯穿各层。
+- 序列化与项目既有方案对齐（手工字典、`NSCoding`、YYModel / MJExtension 等），字段与 key 清晰。
+- 优先组合而非继承；用 `@protocol` 表达契约；可复用逻辑放 Category / 工具类。
 
-## 模块与状态
+## 架构与模块
 
-- **新增模块时参考当前架构设计**：对齐既有目录分层、命名、`ViewController` / `View` / `Model` / `Category` 等组织方式与依赖方向，不另起一套结构；编码风格参考项目既有业务页。
-- 页面状态以控制器与视图属性承载；跨页共享用项目既有方案（单例、通知、委托、响应式库等），勿混用多套状态通道。
-- 常量与文案：一次性、仅当前方法使用的放方法内部；跨方法或可复用的字符串、图片名等集中管理，避免魔法散落。
-- 修改落在当前需求相关文件；生成内容整合进现有文档结构，不要另起无关文件。
-- 本地化用 `NSLocalizedString` / `Localizable.strings`（或项目既有本地化方案）管理。
+- **对齐项目现有分层**：`Models` / `Views` / `Controllers` / `Services`（或仓库既有目录），不另起架构；编码风格参考既有业务页。
+- ViewController 不堆：网络、复杂数据转换、厚重业务；下沉到 Service / 模型 / 既有中间层。
+- 网络：`ViewController → Service → API Client`；禁止在 Controller 里直接铺 `NSURLSession` 业务请求（演示页除外）。
+- 常量与文案：一次性用完的放方法内；跨方法复用的集中管理，避免魔法散落。
+- 本地化：`NSLocalizedString` / 项目既有方案。
+- 修改只落需求相关文件；不删公共接口与既有注释；不引入无必要第三方依赖。
 
-## 视图与布局
+## UIKit 与布局
 
-- 拆成更小、更专注的 `UIView` / Cell；避免单个控制器方法过长、视图层级过深。
-- 列表用 `UITableView` / `UICollectionView` 复用；`dequeue` 与 `register` 与项目既有写法一致；动态内容变化时注意稳定标识（如业务 id）。
-- `viewDidLoad` / `viewDidLayoutSubviews` 职责清晰：创建一次的放 `viewDidLoad`；依赖 bounds 的布局放 `layoutSubviews` / `viewDidLayoutSubviews` 或约束。
-- 优先 Auto Layout（含 Masonry / SnapKit 等项目既有方式）或与仓库一致的 frame 布局；勿在同一控件上混用且互相打架。
-- 布局宽度自适应，避免无必要的固定宽度硬编码（演示页除外且应可收敛）。
-- 非必须不使用过度绝对坐标叠视图；背景优先 `backgroundColor` / `layer` / 图片视图。
-- 同类多状态用 `NS_ENUM`，枚举定义放头文件或独立文件，枚举值加中文注释。
+- 拆小 `UIView` / Cell；Cell 只做展示（如 `configureWithModel:` / `cellWithModel:`），不做业务。
+- 列表必须复用（`registerClass:` / `registerNib:` + `dequeue`）；禁止每次 `alloc` 新 Cell。
+- 生命周期职责：`viewDidLoad` 一次性创建；依赖 bounds 的布局放 `layoutSubviews` / `viewDidLayoutSubviews` 或约束；`viewWillAppear` / `viewDidAppear` 等勿堆重逻辑。
+- **禁止在 `init` 里访问 `self.view`**（触发过早加载）。
+- 优先 Auto Layout（`NSLayoutAnchor` / Masonry 等项目既有方式）；与 frame 混用时勿互相打架。
+- 宽度自适应；尊重 Safe Area；非必须不用绝对坐标堆叠；背景优先 `backgroundColor` / 图片视图；禁止贴图凑 UI。
+- 多状态用 `NS_ENUM`，值加中文注释。
 
-## 线程与生命周期
+### 导航栏与系统控件（易踩坑）
 
-- UIKit 更新必须在主线程；后台完成后用 `dispatch_async(dispatch_get_main_queue(), ...)` 或项目封装回切。
-- 委托、KVO、通知、Timer、Block 回调注意生命周期：`dealloc` 移除观察与失效 Timer；避免野指针与重复注册。
-- 持有 `CADisplayLink` / `NSTimer` / 强引用 Block 时写清释放路径。
-- 与 Swift 混编时：需要 ObjC 可见的类型加正确注解（`@objc` / `@objcMembers`）；Swift 调用侧注意可选与命名桥接；改 Swift 公共 API 后确认 `*-Swift.h` 生成结果可用。
+- 自定义 `titleView` 以 frame / bounds 为准时，勿假设一定尊重 `intrinsicContentSize`；改文字后按项目方式 `sizeToFit` 或重设 `titleView`。
+- 勿在导航栏布局同步链路里直接改 `titleView.frame`（易 AL 死循环）；必要时下一圈 runloop。
+- 慎用 `UIAppearance` 碰 `UIButton.titleLabel` / `imageView`（iOS 15+ 导航栏易布局风暴）。
+- iOS 15+ TableView：贴顶 header 注意 `sectionHeaderTopPadding`；头图 / 轮播可用 `tableHeaderView` 规避 section 顶空白。
 
-## 主题与样式
+## 并发与生命周期
 
-- 用 `Asset Catalog` 颜色 / 动态 Color、以及项目既有主题色扩展（如 `UIColor.themeColor`）管理色板；禁止硬编码散落主题色（演示页除外且应可收敛）。
-- 字体与间距优先系统语义或项目统一常量，避免魔法字号遍地开花。
-- 禁止贴图凑 UI；优先系统控件、SF Symbols（`UIImage systemImageNamed:`）与项目图标扩展。
-- 响应式用 Safe Area、Auto Layout 优先级与项目既有适配方式。
+- UIKit 必须在主线程更新；后台完成后主队列回切。
+- 后台任务用自建队列（串行 / 并行按需）或项目封装；避免无节制地 `dispatch_get_global_queue` 轰炸。
+- 委托、KVO、通知、`NSTimer` / `CADisplayLink`、强引用 Block：在 `dealloc`（或对等时机）移除 / invalidate；防止野指针与重复注册。
+- 避免主线程重计算与无节制频繁 layout；大图勿一次性整包 `NSData` 塞内存，走 `UIImage` + 缓存（详见 `shared/performance.md`）。
 
-## 资源与工程
+## 与 Swift 混编
 
-- 图片 / 资源名默认英文；Assets 中区分 `@1x/@2x/@3x` 或按项目约定使用 Single Scale / PDF。
-- 除不透明背景图外，小图标默认透明底。
-- **新增 `.h/.m/.swift` 文件后必须加入正确 Target Membership**（`project.pbxproj` Compile Sources）；只落盘不进工程 → 链接 / 运行期找不到符号。
-- 改 `Info.plist` 权限文案时同步中英文（若项目有多语言）。
-- 权限、URL Scheme、后台模式等能力变更须在工程配置与说明中可追踪，勿只改代码。
-- 使用 `PrefixHeader.pch` 的工程：仅放真正全局、稳定的导入；不要把业务头文件随意塞进 PCH。
+- ObjC 可见 API 正确暴露（`@objc` / 头文件可见性按项目约定）；改 Swift 公共接口后确认 `*-Swift.h` 可用。
+- 注意可空性、命名桥接与模块导入；混编边界保持薄、依赖单向清晰。
 
-## UINavigationBar / 系统控件注意点
+## 主题、资源与工程
 
-- 自定义 `titleView` 以 **frame / bounds** 为准时，勿假设系统一定尊重 `intrinsicContentSize`；动态改文字后按项目既有方式 `sizeToFit` 或重设 `titleView`。
-- 避免在导航栏布局同步链路里直接改 `titleView.frame` 造成 Auto Layout 死循环；必要时丢到下一圈 runloop。
-- 慎用 `UIAppearance` 改 `UIButton.titleLabel` / `imageView` 等会强制创建子视图的代理属性，尤其在 `UINavigationBar` 场景（iOS 15+ 易触发布局风暴）。
-- iOS 15+ `UITableView`：需要贴顶的 header 注意 `sectionHeaderTopPadding`；轮播 / 头图优先 `tableHeaderView` 若 section header 顶部空白难消。
+- 颜色 / 字体走 Asset Catalog 或项目主题扩展；禁止散落硬编码主题色（演示页可收敛除外）。
+- 优先系统控件与 SF Symbols；小图标默认透明底；资源名英文；Assets 区分 `@1x/@2x/@3x` 或按项目 Single Scale / PDF 约定。
+- **新增 `.h/.m/.swift` 必须加入 Target Membership（Compile Sources）**；只落盘不进工程会链接失败。
+- 改 `Info.plist` 权限文案时同步中英文（若项目有多语言）；权限、URL Scheme、后台模式等变更须同步工程配置与说明，勿只改代码。
+- 密钥 / Token / 密码禁止硬编码；用 Keychain 或环境配置（详见 `shared/security.md`）。
 
 ## 质量门禁
 
-- 所有方法都要有中文注释；复杂逻辑与非显而易见的决策写清注释。
-- 代码审查或精简时不要删除代码注释。
-- 每次新增模块后自动做一次代码审查，并按结果修改。
-- 改完相关 ObjC 文件后尽量编译通过（Xcode / `xcodebuild`）；有弃用 API、可空性、循环引用警告时优先修再结束。
-- 如果遇到无法判断的场景，遵循 Apple Objective-C / UIKit / Human Interface Guidelines 官方文档最佳实践。
+- 所有方法都要有中文注释；复杂决策写清原因；审查或精简时不删既有注释。
+- 新增较大模块或架构相关改动时，交付前做一次自审并按结果修改；小改动以编译 / 分析通过为准。
+- 交付前核对：ARC 与循环引用、主线程 UI、Cocoa 命名、Nullability、可测性、无重复代码、无编译 / 分析警告。
+- 无法判断时遵循 Apple Objective-C / UIKit / HIG 官方文档。

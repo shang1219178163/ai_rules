@@ -1,66 +1,65 @@
 ---
 name: remove_json_serializable
 description: >-
-  Migrates Dart/Flutter models off json_annotation JsonSerializable to hand-written
-  fromJson/toJson. Use when removing @JsonSerializable, deleting *.g.dart, or converting
-  code-generated models to manual serialization.
+  将 Dart/Flutter 模型从 json_annotation JsonSerializable 迁移为手写 fromJson/toJson。
+  在移除 @JsonSerializable、删除 *.g.dart，或把代码生成模型改为手动序列化时使用。
 alwaysApply: false
 ---
 
-# Remove JsonSerializable
+# 移除 JsonSerializable
 
-Convert `@JsonSerializable` models to plain Dart classes with hand-written `fromJson` / `toJson`. Do **not** keep `json_annotation`, `part '*.g.dart'`, or generated serializers.
+把 `@JsonSerializable` 模型改成带手写 `fromJson` / `toJson` 的普通 Dart 类。**不要**保留 `json_annotation`、`part '*.g.dart'` 或生成序列化器。
 
-## When to use
+## 何时使用
 
-- User asks to remove `JsonSerializable` / `*.g.dart`
-- Migrating an `*_entity.dart` (+ `.g.dart`) to a hand-written model
-- Replacing generated `static Foo fromJson` / `_$FooFromJson` with manual mapping
+- 用户要求移除 `JsonSerializable` / `*.g.dart`
+- 将 `*_entity.dart`（+ `.g.dart`）迁到手写模型
+- 用手动映射替换生成的 `static Foo fromJson` / `_$FooFromJson`
 
-## Workflow
+## 工作流
 
-Copy and track:
+复制并勾选进度：
 
 ```
 Task Progress:
-- [ ] 1. Inventory source + generated mapping
-- [ ] 2. Write plain models (no JsonSerializable)
-- [ ] 3. Add hand-written fromJson / toJson
-- [ ] 4. Swap files / keep import paths stable
-- [ ] 5. Update dependents + analyze
+- [ ] 1. 盘点源文件与生成映射
+- [ ] 2. 写普通模型（无 JsonSerializable）
+- [ ] 3. 补全手写 fromJson / toJson
+- [ ] 4. 替换文件 / 保持 import 路径稳定
+- [ ] 5. 更新引用方 + analyze
 ```
 
-### 1. Inventory source + generated mapping
+### 1. 盘点源文件与生成映射
 
-Read both:
+同时阅读：
 
-- Source: `@JsonSerializable`, `@JsonKey(name: ...)`, nested types, mixins
-- Generated: `*.g.dart` — **authoritative for JSON key names** (e.g. field `attetionItems` ↔ key `'items'`)
+- 源文件：`@JsonSerializable`、`@JsonKey(name: ...)`、嵌套类型、mixin
+- 生成文件：`*.g.dart` — **JSON key 名称以它为准**（例如字段 `attetionItems` ↔ key `'items'`）
 
-Also find importers:
+并查找引用方：
 
 ```bash
 rg -n "path/to/foo_entity\.dart|FooEntity\.fromJson" lib --glob '*.dart'
 ```
 
-### 2. Write plain models (no JsonSerializable)
+### 2. 写普通模型（无 JsonSerializable）
 
-For every class in the file:
+对文件中每个类：
 
-**Remove**
+**删除**
 
 - `import 'package:json_annotation/...'`
 - `part '...g.dart';`
 - `@JsonSerializable(...)`
 - `@JsonKey(...)`
-- Generated `static X fromJson(...) => _$XFromJson(...)` / `toJson() => _$XToJson(this)`
+- 生成式 `static X fromJson(...) => _$XFromJson(...)` / `toJson() => _$XToJson(this)`
 
-**Keep**
+**保留**
 
-- Fields, named constructors, getters, mixins/`@override` members
-- Nested type imports that are still needed
+- 字段、命名构造、getter、mixin / `@override` 成员
+- 仍需要的嵌套类型 import
 
-Prefer the project's existing hand-written style (named constructor that assigns fields), e.g.:
+优先贴合项目既有手写风格（命名构造里赋值字段），例如：
 
 ```dart
 class Foo {
@@ -83,13 +82,13 @@ class Foo {
 }
 ```
 
-### 3. Add hand-written fromJson / toJson
+### 3. 补全手写 fromJson / toJson
 
-Rules:
+规则：
 
-- Mirror **`.g.dart` key names**, not Dart field names when they differ
-- Nested objects: `json['x'] == null ? null : Child.fromJson(json['x'] as Map<String, dynamic>)`
-- Lists:
+- 对齐 **`.g.dart` 的 key 名**；字段名与 key 不一致时以 key 为准
+- 嵌套对象：`json['x'] == null ? null : Child.fromJson(json['x'] as Map<String, dynamic>)`
+- 列表：
 
 ```dart
 if (json['items'] != null) {
@@ -98,50 +97,50 @@ if (json['items'] != null) {
 }
 ```
 
-- Numbers: `(json['n'] as num?)?.toInt()` when the field is `int?`
-- `toJson` for lists/objects: `?.map((e) => e.toJson()).toList()` / `?.toJson()`
-- Do **not** reintroduce `JsonSerializable`
+- 数字：字段为 `int?` 时用 `(json['n'] as num?)?.toInt()`
+- `toJson` 中列表/对象：`?.map((e) => e.toJson()).toList()` / `?.toJson()`
+- **不要**重新引入 `JsonSerializable`
 
-### 4. Swap files / keep import paths stable
+### 4. 替换文件 / 保持 import 路径稳定
 
-Preferred in-place replace (avoids mass import edits):
+优先原地替换（减少大面积改 import）：
 
-1. Write the new hand-written content to the **same path** as the old entity (or rename temp → final name the user asked for)
-2. Delete `*.g.dart`
-3. Delete any temporary `*_model.dart` if it was only a staging file
+1. 把手写内容写到与旧 entity **相同路径**（或按用户要求 rename temp → 最终名）
+2. 删除 `*.g.dart`
+3. 若临时 `*_model.dart` 仅作中转，一并删除
 
-If the user asks to rename (e.g. `attention_model` → `attetion_entity`):
+若用户要求改名（如 `attention_model` → `attetion_entity`）：
 
 ```bash
 rm path/foo_entity.dart path/foo_entity.g.dart
 mv path/foo_model.dart path/foo_entity.dart
 ```
 
-Keep **public class names** stable unless the user explicitly wants renames, so existing `import` / `Foo.fromJson` call sites keep working.
+除非用户明确要求改名，否则保持 **公共类名** 稳定，使既有 `import` / `Foo.fromJson` 调用点继续可用。
 
-### 5. Update dependents + analyze
+### 5. 更新引用方 + analyze
 
 ```bash
 dart analyze path/to/new_or_replaced.dart path/to/importers...
 ```
 
-Fix only breakages caused by the migration (e.g. `static fromJson` → named constructor is usually call-site compatible as `Foo.fromJson(map)`).
+只修迁移引入的破坏（例如 `static fromJson` → 命名构造，调用点通常仍可写 `Foo.fromJson(map)`）。
 
-If the project uses graphify, run `graphify update .` after code changes.
+若项目使用 graphify，改码后执行 `graphify update .`。
 
-## Checklist before done
+## 完成前检查
 
-- [ ] No `json_annotation` / `part '*.g.dart'` / `@JsonSerializable` / `@JsonKey` left on migrated types
-- [ ] Every migrated class has hand-written `fromJson` + `toJson`
-- [ ] JSON keys match former `.g.dart` (including renamed keys)
-- [ ] Old `.g.dart` (and staging files) deleted
-- [ ] Importers still resolve; `dart analyze` clean for touched files
+- [ ] 已迁移类型上无 `json_annotation` / `part '*.g.dart'` / `@JsonSerializable` / `@JsonKey`
+- [ ] 每个已迁移类都有手写 `fromJson` + `toJson`
+- [ ] JSON key 与原 `.g.dart` 一致（含重命名 key）
+- [ ] 旧 `.g.dart`（及中转文件）已删除
+- [ ] 引用方可解析；触及文件 `dart analyze` 干净
 
-## Example (this repo)
+## 示例（本仓库）
 
-Migrating `lib/models/attetion_entity.dart` (+ `.g.dart`):
+迁移 `lib/models/attetion_entity.dart`（+ `.g.dart`）：
 
-1. Stage hand-written copy without annotations
-2. Port mapping from `attetion_entity.g.dart` (notably `items` ↔ `attetionItems`)
-3. Replace entity file with hand-written version; delete `.g.dart`
-4. Leave imports as `package:social_fe_app/models/attetion_entity.dart`
+1. 先写无注解的手写副本
+2. 从 `attetion_entity.g.dart` 移植映射（注意 `items` ↔ `attetionItems`）
+3. 用手写版本替换 entity；删除 `.g.dart`
+4. import 仍保持 `package:social_fe_app/models/attetion_entity.dart`

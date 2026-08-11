@@ -1,6 +1,6 @@
 ---
 description: Flutter/Dart 编码规范。编写或修改 Dart/Flutter 代码时使用。
-globs: "**/*.{dart,yaml}"
+globs: "**/*.dart,**/pubspec.yaml,**/analysis_options.yaml"
 alwaysApply: false
 ---
 

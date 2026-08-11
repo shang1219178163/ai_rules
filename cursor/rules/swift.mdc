@@ -1,6 +1,6 @@
 ---
-description: Swift/SwiftUI 编码规范。编写或修改 Swift / SwiftUI / UIKit 混编代码时使用。
-globs: "**/*.{swift,h,m,mm}"
+description: Swift/SwiftUI 编码规范。编写或修改 Swift / SwiftUI 代码时使用；UIKit 混编或改 ObjC 时同时参考 objc。
+globs: "**/*.swift,**/Package.swift"
 alwaysApply: false
 ---
 

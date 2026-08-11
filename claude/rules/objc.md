@@ -1,8 +1,9 @@
 ---
 paths:
-  - "**/*.{h,m,mm}"
+  - "**/*.h"
+  - "**/*.m"
+  - "**/*.mm"
   - "**/*.pch"
-  - "**/*.pbxproj"
   - "**/Podfile"
   - "**/Podfile.lock"
 ---

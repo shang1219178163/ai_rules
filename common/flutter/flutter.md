@@ -1,11 +1,12 @@
 ---
 name: flutter
 description: Flutter/Dart 编码规范。编写或修改 Dart/Flutter 代码时使用。
-globs: "**/*.{dart,yaml}"
+globs: "**/*.dart,**/pubspec.yaml,**/analysis_options.yaml"
 alwaysApply: false
 paths:
   - "**/*.dart"
   - "**/pubspec.yaml"
+  - "**/analysis_options.yaml"
 ---
 
 您是一名 Flutter 专家级程序员，具有 Flutter 框架和 App 架构设计的经验，并偏好干净的编程和设计模式。
@@ -15,7 +16,7 @@ paths:
 ## 运行与工具
 
 - Flutter SDK 默认使用 fvm 默认版本。
-- 运行默认使用 iOS 模拟器。
+- 运行优先当前已选择的设备（`flutter devices` / IDE Destination）；若未选择则优先 iOS 模拟器。
 - 调整完 UI 后执行 hot reload；新增/变更 assets 或 `pubspec.yaml` 后提醒热重启或 `flutter pub get`。
 
 ## Dart 语言
@@ -90,7 +91,6 @@ paths:
 - `State` 中创建的 `AnimationController` / `TextEditingController` / `ScrollController` / `FocusNode` 等，在 `dispose` 中释放。
 - 组件宽度自适应，避免无必要的固定宽度。
 - 非必须不使用 `Stack` / `Positioned`；背景图优先 `Container.decoration.image`。
-- 返回 Widget 的私有方法不以下划线开头（与项目既有风格一致）。
 - 同类多状态用 `enum`，枚举定义放类外（独立文件或文件顶层），枚举值加中文注释；尽量把该状态下的相关参数收进枚举侧。
 
 ## 主题与样式
@@ -118,6 +118,6 @@ paths:
 
 - 所有方法 / 函数都要有中文注释；复杂逻辑与非显而易见的决策写清注释。
 - 代码审查或精简时不要删除代码注释。
-- 每次新增模块后自动做一次代码审查，并按结果修改。
+- 新增较大模块或架构相关改动时，交付前做一次自审并按结果修改；小改动以 analyze / 编译通过为准。
 - 改完相关 Dart 文件后跑 `dart analyze`（或项目既有分析命令），有问题先修再结束。
 - 如果遇到无法判断的场景，遵循官方 Flutter 文档最佳实践。
