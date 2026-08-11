@@ -5,4 +5,4 @@ paths:
   - "**/Package.swift"
   - "**/*.pbxproj"
 ---
-@../../common/swift/swift.md
+@../../common/ios/swift.md

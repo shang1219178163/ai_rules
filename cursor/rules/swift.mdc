@@ -4,4 +4,4 @@ globs: "**/*.{swift,h,m,mm}"
 alwaysApply: false
 ---
 
-[swift](mdc:../../common/swift/swift.md)
+[swift](mdc:../../common/ios/swift.md)

@@ -1,0 +1,7 @@
+---
+description: Objective-C / UIKit 编码规范。编写或修改 ObjC、UIKit、与 Swift 混编相关代码时使用。
+globs: "**/*.{h,m,mm}"
+alwaysApply: false
+---
+
+[objc](mdc:../../common/ios/objc.md)
