@@ -17,6 +17,8 @@ common/                 # Single source of truth (rule bodies)
   core.md               # Always-on: 中文、禁止自动 git commit
   flutter/              # Client / Flutter stack
     flutter.md
+  swift/                # Client / SwiftUI · UIKit stack
+    swift.md
   backend/              # API, data, messaging, services
     backend.md          # Long reference → skills / agent-requested
     api.md database.md …
@@ -108,6 +110,8 @@ common/                 # 唯一正文（规则内容）
   core.md               # 始终加载：中文回复、禁止自动 git commit
   flutter/              # 客户端 / Flutter
     flutter.md
+  swift/                # 客户端 / SwiftUI · UIKit
+    swift.md
   backend/              # API、数据、消息、服务
     backend.md          # 长文参考 → Skills / Agent 按需选用
     api.md database.md …
