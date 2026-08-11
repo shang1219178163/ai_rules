@@ -4,4 +4,4 @@ globs: "**/*.proto"
 alwaysApply: false
 ---
 
-[grpc](mdc:../../common/grpc.md)
+[grpc](mdc:../../common/backend/grpc.md)

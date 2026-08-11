@@ -6,4 +6,4 @@ paths:
   - "**/*.yaml"
   - "**/*.yml"
 ---
-@../../common/api.md
+@../../common/backend/api.md

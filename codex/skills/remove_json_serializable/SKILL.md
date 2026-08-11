@@ -1,0 +1,1 @@
+../../../common/flutter/remove_json_serializable.md

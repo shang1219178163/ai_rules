@@ -1,0 +1,6 @@
+---
+description: >-
+alwaysApply: false
+---
+
+[remove_json_serializable](mdc:../../common/flutter/remove_json_serializable.md)

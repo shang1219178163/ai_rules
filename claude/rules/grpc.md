@@ -3,4 +3,4 @@ paths:
   - "**/*.proto"
   - "**/*grpc*"
 ---
-@../../common/grpc.md
+@../../common/backend/grpc.md

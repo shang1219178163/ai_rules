@@ -4,4 +4,4 @@ globs: "**/*log*"
 alwaysApply: false
 ---
 
-[logging](mdc:../../common/logging.md)
+[logging](mdc:../../common/shared/logging.md)

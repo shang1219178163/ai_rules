@@ -4,4 +4,4 @@ globs: "**/*.{yaml,yml,json}"
 alwaysApply: false
 ---
 
-[api](mdc:../../common/api.md)
+[api](mdc:../../common/backend/api.md)

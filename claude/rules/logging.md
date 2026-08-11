@@ -3,4 +3,4 @@ paths:
   - "**/*log*"
   - "**/*logger*"
 ---
-@../../common/logging.md
+@../../common/shared/logging.md

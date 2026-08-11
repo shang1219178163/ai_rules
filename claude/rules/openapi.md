@@ -3,4 +3,4 @@ paths:
   - "**/*openapi*"
   - "**/swagger*"
 ---
-@../../common/openapi.md
+@../../common/backend/openapi.md

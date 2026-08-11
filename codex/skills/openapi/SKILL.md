@@ -1,1 +1,1 @@
-../../../common/openapi.md
+../../../common/backend/openapi.md

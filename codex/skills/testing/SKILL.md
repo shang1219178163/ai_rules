@@ -1,1 +1,1 @@
-../../../common/testing.md
+../../../common/shared/testing.md

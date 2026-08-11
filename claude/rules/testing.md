@@ -6,4 +6,4 @@ paths:
   - "**/tests/**"
   - "**/__tests__/**"
 ---
-@../../common/testing.md
+@../../common/shared/testing.md

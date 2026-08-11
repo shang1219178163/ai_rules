@@ -156,6 +156,10 @@ paths:
 ### 资源文件
 - assets 中的文件默认以英文下划线命名。
 - assets 中的除了背景图片背景不透明，小图标默认都应该是背景透明。
+- 在 `assets/`（含 `assets/images/` 等子目录）下**新增文件夹**时，必须同步在 `pubspec.yaml` 的 `flutter.assets` 中注册该路径（例如 `- assets/images/common/`）。
+  - 仅写入磁盘不注册 → 运行时 `Unable to load asset`。
+  - 父目录已注册（如 `assets/images/`）不能替代显式子目录条目；与现有 `pubspec.yaml` 写法一致，为新文件夹单独添加一行。
+  - 改完后提醒热重启或 `flutter pub get`；任务结束前确认已注册。
 
 ### UI 和样式
 

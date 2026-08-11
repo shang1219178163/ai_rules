@@ -4,4 +4,4 @@ globs: "**/*{mq,queue,consumer,producer,kafka,rabbit}*"
 alwaysApply: false
 ---
 
-[mq](mdc:../../common/mq.md)
+[mq](mdc:../../common/backend/mq.md)

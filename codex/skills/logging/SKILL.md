@@ -1,1 +1,1 @@
-../../../common/logging.md
+../../../common/shared/logging.md

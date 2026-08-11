@@ -4,4 +4,4 @@ globs: "**/*.{sql,prisma}"
 alwaysApply: false
 ---
 
-[database](mdc:../../common/database.md)
+[database](mdc:../../common/backend/database.md)

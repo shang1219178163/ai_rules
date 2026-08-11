@@ -4,4 +4,4 @@ globs: "**/*redis*"
 alwaysApply: false
 ---
 
-[redis](mdc:../../common/redis.md)
+[redis](mdc:../../common/backend/redis.md)

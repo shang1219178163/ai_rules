@@ -4,4 +4,4 @@ globs: "**/Dockerfile*,**/docker-compose*.{yml,yaml},**/*.{dockerfile},**/k8s/**
 alwaysApply: false
 ---
 
-[docker](mdc:../../common/docker.md)
+[docker](mdc:../../common/ops/docker.md)

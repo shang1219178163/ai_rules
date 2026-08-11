@@ -6,4 +6,4 @@ paths:
   - "**/k8s/**"
   - "**/kubernetes/**"
 ---
-@../../common/docker.md
+@../../common/ops/docker.md

@@ -6,4 +6,4 @@ paths:
   - "**/migrations/**"
   - "**/*.prisma"
 ---
-@../../common/database.md
+@../../common/backend/database.md

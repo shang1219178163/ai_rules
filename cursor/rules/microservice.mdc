@@ -3,4 +3,4 @@ description: 微服务规范。设计服务拆分、编排或治理相关代码�
 alwaysApply: false
 ---
 
-[microservice](mdc:../../common/microservice.md)
+[microservice](mdc:../../common/backend/microservice.md)

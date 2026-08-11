@@ -4,4 +4,4 @@ globs: "**/*openapi*,**/swagger*.{yaml,yml,json}"
 alwaysApply: false
 ---
 
-[openapi](mdc:../../common/openapi.md)
+[openapi](mdc:../../common/backend/openapi.md)

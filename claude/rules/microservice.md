@@ -2,4 +2,4 @@
 paths:
   - "**/*service*/**"
 ---
-@../../common/microservice.md
+@../../common/backend/microservice.md

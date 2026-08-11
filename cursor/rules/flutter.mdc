@@ -4,4 +4,4 @@ globs: "**/*.{dart,yaml}"
 alwaysApply: false
 ---
 
-[flutter](mdc:../../common/flutter.md)
+[flutter](mdc:../../common/flutter/flutter.md)

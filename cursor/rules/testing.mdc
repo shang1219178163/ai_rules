@@ -4,4 +4,4 @@ globs: "**/*.{test,spec}.*"
 alwaysApply: false
 ---
 
-[testing](mdc:../../common/testing.md)
+[testing](mdc:../../common/shared/testing.md)

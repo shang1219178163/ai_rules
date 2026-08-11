@@ -15,9 +15,15 @@ Personal AI rules for multi-project sharing across Claude Code, Codex, and Curso
 ```text
 common/                 # Single source of truth (rule bodies)
   core.md               # Always-on: 中文、禁止自动 git commit
-  flutter.md            # Path / skill scoped modules…
-  backend.md            # Long reference → skills / agent-requested
-  …
+  flutter/              # Client / Flutter stack
+    flutter.md
+  backend/              # API, data, messaging, services
+    backend.md          # Long reference → skills / agent-requested
+    api.md database.md …
+  shared/               # Cross-cutting quality
+    testing.md security.md …
+  ops/                  # Delivery / runtime
+    docker.md
 
 claude/
   CLAUDE.md             # Only @common/core.md
@@ -26,7 +32,7 @@ claude/
 
 codex/
   AGENTS.md             # Symlink → common/core.md
-  skills/<topic>/       # Symlink SKILL.md → common/<topic>.md
+  skills/<topic>/       # Symlink SKILL.md → common/**/<topic>.md
                         # Install as .agents/skills/
 
 cursor/rules/           # Thin .mdc wrappers with globs / alwaysApply
@@ -69,13 +75,14 @@ Codex does not expand `@` imports; use symlinks for always-on and skills.
 
 ### Editing rules
 
-- Edit bodies only under `common/`.
-- Keep `common/core.md` short.
+- Edit bodies only under `common/` (any subdirectory).
+- Keep `common/core.md` short; leave it at the common root.
+- Module identity is frontmatter `name` (or file stem), not the folder name.
 - Prefer path triggers for short modules; use skills / agent-requested for large documents (avoid wide globs like `**/*.{ts,js,py}` on `backend.md`).
 
 ### Sync adapters
 
-Body text is referenced (import / symlink), so editing `common/*.md` content does **not** require copying. After you **add / remove / rename** a module or change frontmatter (`globs` / `paths` / `description`), refresh wrappers:
+Body text is referenced (import / symlink), so editing `common/**/*.md` content does **not** require copying. After you **add / remove / rename** a module or change frontmatter (`globs` / `paths` / `description`), refresh wrappers:
 
 ```bash
 ./scripts/sync_common.py
@@ -99,9 +106,15 @@ The script rebuilds `claude/`, `codex/`, and `cursor/rules/` from `common/` fron
 ```text
 common/                 # 唯一正文（规则内容）
   core.md               # 始终加载：中文回复、禁止自动 git commit
-  flutter.md            # 按路径 / Skill 按需加载的模块…
-  backend.md            # 长文参考 → Skills / Agent 按需选用
-  …
+  flutter/              # 客户端 / Flutter
+    flutter.md
+  backend/              # API、数据、消息、服务
+    backend.md          # 长文参考 → Skills / Agent 按需选用
+    api.md database.md …
+  shared/               # 横切质量
+    testing.md security.md …
+  ops/                  # 交付 / 运行时
+    docker.md
 
 claude/
   CLAUDE.md             # 仅 @common/core.md
@@ -110,7 +123,7 @@ claude/
 
 codex/
   AGENTS.md             # 符号链接 → common/core.md
-  skills/<topic>/       # SKILL.md 符号链接 → common/<topic>.md
+  skills/<topic>/       # SKILL.md 符号链接 → common/**/<topic>.md
                         # 安装为 .agents/skills/
 
 cursor/rules/           # 薄封装 .mdc（globs / alwaysApply）
@@ -153,13 +166,14 @@ Codex **不支持** `@` 展开；always-on 与 skills 请用符号链接。
 
 ### 编辑约定
 
-- 正文只改 `common/`。
-- `common/core.md` 保持极短。
+- 正文只改 `common/`（任意子目录）。
+- `common/core.md` 保持极短，放在 `common/` 根目录。
+- 模块标识是 frontmatter `name`（或文件 stem），与所在子目录无关。
 - 短规范优先路径触发；长文档用 Skills / agent-requested（避免给 `backend.md` 配 `**/*.{ts,js,py}` 这类宽泛 globs）。
 
 ### 一键同步挂载层
 
-正文通过引用 / 符号链接读取，**只改 `common` 正文内容时不必拷贝**。在**新增 / 删除 / 重命名**模块，或改 frontmatter（`globs` / `paths` / `description`）之后，运行：
+正文通过引用 / 符号链接读取，**只改 `common/**/*.md` 正文内容时不必拷贝**。在**新增 / 删除 / 重命名**模块，或改 frontmatter（`globs` / `paths` / `description`）之后，运行：
 
 ```bash
 ./scripts/sync_common.py

@@ -4,4 +4,4 @@ globs: "**/*{auth,security,crypto}*"
 alwaysApply: false
 ---
 
-[security](mdc:../../common/security.md)
+[security](mdc:../../common/shared/security.md)

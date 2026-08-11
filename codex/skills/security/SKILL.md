@@ -1,1 +1,1 @@
-../../../common/security.md
+../../../common/shared/security.md

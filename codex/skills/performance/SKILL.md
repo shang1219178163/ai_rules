@@ -1,1 +1,1 @@
-../../../common/performance.md
+../../../common/shared/performance.md

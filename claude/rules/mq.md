@@ -7,4 +7,4 @@ paths:
   - "**/*kafka*"
   - "**/*rabbit*"
 ---
-@../../common/mq.md
+@../../common/backend/mq.md

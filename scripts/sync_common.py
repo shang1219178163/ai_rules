@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """从 common/ 一键同步 Claude / Codex / Cursor 挂载层。
 
-正文只维护在 common/。本脚本根据各文件 frontmatter 重建：
+正文只维护在 common/（可分子目录：flutter/、backend/、shared/、ops/）。
+本脚本递归扫描 common/**/*.md，按 frontmatter 重建：
   - claude/CLAUDE.md、claude/rules/、claude/skills/
   - codex/AGENTS.md、codex/skills/
   - cursor/rules/*.mdc
 
+模块名取 frontmatter name（或文件 stem），与所在子目录无关。
 用法（仓库根目录）:
   ./scripts/sync_common.py
   python3 scripts/sync_common.py --dry-run
@@ -66,19 +68,28 @@ def load_modules() -> dict[str, dict]:
     if not COMMON.is_dir():
         raise SystemExit(f"missing {COMMON}")
     modules: dict[str, dict] = {}
-    for path in sorted(COMMON.glob("*.md")):
+    for path in sorted(COMMON.rglob("*.md")):
+        if any(part.startswith(".") for part in path.relative_to(COMMON).parts):
+            continue
         meta, _ = parse_frontmatter(path.read_text(encoding="utf-8"))
         name = meta.get("name") or path.stem
+        rel = path.relative_to(COMMON).as_posix()
+        is_core = path == COMMON / f"{CORE_NAME}.md"
+        if name in modules:
+            prev = modules[name]["rel"]
+            raise SystemExit(f"duplicate module name {name!r}: {prev} and {rel}")
         modules[name] = {
             "path": path,
             "stem": path.stem,
+            "rel": rel,
             "meta": meta,
-            "is_core": path.stem == CORE_NAME,
+            "is_core": is_core,
         }
     if CORE_NAME not in modules and (COMMON / f"{CORE_NAME}.md").exists():
         modules[CORE_NAME] = {
             "path": COMMON / f"{CORE_NAME}.md",
             "stem": CORE_NAME,
+            "rel": f"{CORE_NAME}.md",
             "meta": {},
             "is_core": True,
         }
@@ -183,7 +194,7 @@ def sync_claude(modules: dict[str, dict], dry_run: bool) -> None:
                 "---\n"
                 f"{yaml_paths_block(paths)}"
                 "---\n"
-                f"@../../common/{mod['stem']}.md\n"
+                f"@../../common/{mod['rel']}\n"
             )
             write_file(CLAUDE / "rules" / f"{name}.md", content, dry_run)
         else:
@@ -194,7 +205,7 @@ def sync_claude(modules: dict[str, dict], dry_run: bool) -> None:
                 f"name: {name}\n"
                 f"description: {desc}\n"
                 "---\n"
-                f"@../../../common/{mod['stem']}.md\n"
+                f"@../../../common/{mod['rel']}\n"
             )
             write_file(CLAUDE / "skills" / name / "SKILL.md", content, dry_run)
 
@@ -224,7 +235,7 @@ def sync_codex(modules: dict[str, dict], dry_run: bool) -> None:
         keep.add(name)
         ensure_symlink(
             CODEX / "skills" / name / "SKILL.md",
-            COMMON / f"{mod['stem']}.md",
+            mod["path"],
             dry_run,
         )
 
@@ -258,7 +269,7 @@ def sync_cursor(modules: dict[str, dict], dry_run: bool) -> None:
                 f"description: {desc if desc != name else '全局约定：中文回复、禁止自动提交'}\n"
                 "alwaysApply: true\n"
                 "---\n\n"
-                f"[core](mdc:../../common/core.md)\n"
+                f"[core](mdc:../../common/{mod['rel']})\n"
             )
         elif globs:
             # globs may be string or leftover list — normalize to string for Cursor
@@ -272,7 +283,7 @@ def sync_cursor(modules: dict[str, dict], dry_run: bool) -> None:
                 f'globs: "{globs_str}"\n'
                 "alwaysApply: false\n"
                 "---\n\n"
-                f"[{name}](mdc:../../common/{mod['stem']}.md)\n"
+                f"[{name}](mdc:../../common/{mod['rel']})\n"
             )
         else:
             # agent-requested
@@ -281,7 +292,7 @@ def sync_cursor(modules: dict[str, dict], dry_run: bool) -> None:
                 f"description: {desc}\n"
                 "alwaysApply: false\n"
                 "---\n\n"
-                f"[{name}](mdc:../../common/{mod['stem']}.md)\n"
+                f"[{name}](mdc:../../common/{mod['rel']})\n"
             )
 
         # core description override when no frontmatter description

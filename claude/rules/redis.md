@@ -3,4 +3,4 @@ paths:
   - "**/*redis*"
   - "**/*cache*"
 ---
-@../../common/redis.md
+@../../common/backend/redis.md

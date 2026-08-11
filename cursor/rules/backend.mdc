@@ -3,4 +3,4 @@ description: 后端接口开发规范（最佳实践）。设计或实现后端 
 alwaysApply: false
 ---
 
-[backend](mdc:../../common/backend.md)
+[backend](mdc:../../common/backend/backend.md)
