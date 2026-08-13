@@ -3,4 +3,4 @@ paths:
   - "**/*.swift"
   - "**/Package.swift"
 ---
-@../../common/ios/swift.md
+@../../common/iOS/swift.md

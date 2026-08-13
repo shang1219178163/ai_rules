@@ -4,4 +4,4 @@ globs: "**/*.swift,**/Package.swift"
 alwaysApply: false
 ---
 
-[swift](mdc:../../common/ios/swift.md)
+[swift](mdc:../../common/iOS/swift.md)

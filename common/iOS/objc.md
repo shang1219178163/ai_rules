@@ -117,6 +117,7 @@ paths:
 
 ## 主题、资源与工程
 
+- Figma导出小图标默认透明底。大图或背景图要带背景色。
 - 颜色 / 字体走 Asset Catalog 或项目主题扩展；禁止散落硬编码主题色（演示页可收敛除外）。
 - 优先系统控件与 SF Symbols；小图标默认透明底；资源名英文；Assets 区分 `@1x/@2x/@3x` 或按项目 Single Scale / PDF 约定。
 - **新增 `.h/.m/.swift` 必须加入 Target Membership（Compile Sources）**；只落盘不进工程会链接失败。

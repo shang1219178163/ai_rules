@@ -7,4 +7,4 @@ paths:
   - "**/Podfile"
   - "**/Podfile.lock"
 ---
-@../../common/ios/objc.md
+@../../common/iOS/objc.md

@@ -103,7 +103,7 @@ paths:
 ## 资源与 pubspec
 
 - assets 文件名默认英文下划线。
-- 除不透明背景图外，小图标默认透明底。
+- Figma导出小图标默认透明底。大图或背景图要带背景色。
 - 导入 / 导出 **WebP** 默认带透明通道（alpha）；勿用带白底截图直接转 WebP。从 SVG 或带 alpha 的 PNG 转出，并用 `webpinfo`（或等价）确认 `Alpha: 1`。占位图、空状态插画、小图标一律透明底；仅全屏 / 卡片不透明背景图可例外。
 - 在 `assets/`（含 `assets/images/` 等）下**新增文件夹**时，必须在 `pubspec.yaml` 的 `flutter.assets` 注册该路径（例如 `- assets/images/common/`）。
   - 只落盘不注册 → 运行时 `Unable to load asset`。

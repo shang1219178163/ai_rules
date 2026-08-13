@@ -4,4 +4,4 @@ globs: "**/*.{h,m,mm}"
 alwaysApply: false
 ---
 
-[objc](mdc:../../common/ios/objc.md)
+[objc](mdc:../../common/iOS/objc.md)
