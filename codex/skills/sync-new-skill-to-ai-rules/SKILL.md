@@ -1,0 +1,1 @@
+../../../common/shared/sync-new-skill-to-ai-rules.md

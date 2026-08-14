@@ -2,6 +2,8 @@ Always respond in 中文。
 
 永远不要自动提交 git。任务完成之后不要自动提交代码。
 
+新增 Skill（Cursor / Claude / Codex）时，必须在 `/Users/shang/GitHub/ai_rules` 的 `common/<领域>/` 再写一份正文，并运行 `./scripts/sync_common.py`。不要只写在业务仓库的 `.cursor/skills/`。
+
 
 **权衡:**这些准则偏向谨慎而非速度。
 对于简单任务,请自行判断。

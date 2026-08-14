@@ -82,6 +82,7 @@ Codex does not expand `@` imports; use symlinks for always-on and skills.
 - Keep `common/core.md` short; leave it at the common root.
 - Module identity is frontmatter `name` (or file stem), not the folder name.
 - Prefer path triggers for short modules; use skills / agent-requested for large documents (avoid wide globs like `**/*.{ts,js,py}` on `backend.md`).
+- New skills also go here: write the body under `common/<stack>/`, then `./scripts/sync_common.py`. Do not leave a skill only in a product repo’s `.cursor/skills/`.
 
 ### Sync adapters
 
@@ -176,6 +177,7 @@ Codex **不支持** `@` 展开；always-on 与 skills 请用符号链接。
 - `common/core.md` 保持极短，放在 `common/` 根目录。
 - 模块标识是 frontmatter `name`（或文件 stem），与所在子目录无关。
 - 短规范优先路径触发；长文档用 Skills / agent-requested（避免给 `backend.md` 配 `**/*.{ts,js,py}` 这类宽泛 globs）。
+- 新增 Skill 也要落到本仓库：正文写在 `common/<领域>/`，再跑 `./scripts/sync_common.py`。不要只写在业务项目的 `.cursor/skills/`。
 
 ### 一键同步挂载层
 

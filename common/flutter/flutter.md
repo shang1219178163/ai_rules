@@ -44,13 +44,14 @@ paths:
 - 类：PascalCase；变量 / 函数 / 方法：camelCase；文件与目录：underscores_case；环境变量：UPPERCASE。
 - 避免魔法数字，用有意义的常量管理常量值。
 - 函数名以动词开头；布尔用 `isX` / `hasX` / `canX` 等。
+- **事件方法名一律以 `on` 开头**（点击、提交、选中、清除、展开等）：`onTap` / `onSearch` / `onClear` / `onMessageTap`。Widget 回调参数同样用 `onX`，不要用 `handleX` / `executeX` 命名事件。
 - 使用完整单词；允许 API、URL，以及循环 `i`/`j`、`err`、`ctx`、`req`/`res`/`next` 等惯用缩写。
 
 ### 函数
 
 - 本条同样适用于方法。
 - 短小、单一职责。
-- 返回布尔：`isX` / `hasX` / `canX`；无返回值：`executeX` / `saveX` 等。
+- 返回布尔：`isX` / `hasX` / `canX`；事件回调：`onX`；其它无返回值动作：`executeX` / `saveX` 等。
 - 提前返回，避免深嵌套；复杂逻辑提取工具函数。
 - 优先高阶函数（`map` / `where` / `fold` 等）；简单逻辑用箭头函数，否则用具名函数。
 - 用默认参数，而不是空检查凑默认值。
@@ -103,6 +104,7 @@ paths:
 ## 资源与 pubspec
 
 - assets 文件名默认英文下划线。
+- **优先使用透明背景的 WebP 图片**（`.webp`），而不是 SVG / 不透明 PNG。
 - Figma导出小图标默认透明底。大图或背景图要带背景色。
 - 导入 / 导出 **WebP** 默认带透明通道（alpha）；勿用带白底截图直接转 WebP。从 SVG 或带 alpha 的 PNG 转出，并用 `webpinfo`（或等价）确认 `Alpha: 1`。占位图、空状态插画、小图标一律透明底；仅全屏 / 卡片不透明背景图可例外。
 - 在 `assets/`（含 `assets/images/` 等）下**新增文件夹**时，必须在 `pubspec.yaml` 的 `flutter.assets` 注册该路径（例如 `- assets/images/common/`）。
