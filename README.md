@@ -16,22 +16,37 @@ Personal AI rules for multi-project sharing across Claude Code, Codex, and Curso
 common/                 # Single source of truth (rule bodies)
   core.md               # Always-on: 中文、禁止自动 git commit、精简保留中文注释
   flutter/              # Client / Flutter stack
-    flutter.md
+    flutter.md          # Path-scoped rule
+    flutter-tech-blog.md        # Skill: Flutter 技术博客撰写
+    dark-mode-image-adapt.md    # Skill: 暗黑模式图片适配
+    do-not-overwrite-local-changes.md  # Skill
+    remove_json_serializable.md # Skill
   ios/                  # Client / iOS (SwiftUI · ObjC · UIKit)
     swift.md
     objc.md
   backend/              # API, data, messaging, services
     backend.md          # Long reference → skills / agent-requested
-    api.md database.md …
-  shared/               # Cross-cutting quality
-    testing.md security.md …
+    api.md              # API 规范
+    database.md         # 数据库规范
+    grpc.md             # gRPC 规范
+    microservice.md     # 微服务规范
+    mq.md               # 消息队列规范
+    openapi.md          # OpenAPI 规范
+    redis.md            # Redis 规范
+  shared/               # Cross-cutting / general
+    testing.md                  # 测试规范（globs: *.{test,spec}.*）
+    security.md                 # 安全规范（globs: *{auth,security,crypto}*）
+    logging.md                  # 日志规范（globs: *log*）
+    performance.md              # 性能优化规范（按需）
+    codex-reconnect-diagnosis.md  # Skill：Codex/Claude Desktop Reconnecting 排查
+    sync-new-skill-to-ai-rules.md  # 工作流：新增 Skill 同步到 ai_rules
   ops/                  # Delivery / runtime
     docker.md
 
 claude/
   CLAUDE.md             # Only @common/core.md
   rules/                # Path-scoped → install as .claude/rules/
-  skills/backend/       # On-demand skill for long backend rules
+  skills/               # On-demand skills (SKILL.md imports common body)
 
 codex/
   AGENTS.md             # Symlink → common/core.md
@@ -111,22 +126,37 @@ The script rebuilds `claude/`, `codex/`, and `cursor/rules/` from `common/` fron
 common/                 # 唯一正文（规则内容）
   core.md               # 始终加载：中文回复、禁止自动 git commit、精简保留中文注释
   flutter/              # 客户端 / Flutter
-    flutter.md
+    flutter.md          # 路径触发规则
+    flutter-tech-blog.md        # Skill：Flutter 技术博客撰写
+    dark-mode-image-adapt.md    # Skill：暗黑模式图片适配
+    do-not-overwrite-local-changes.md  # Skill
+    remove_json_serializable.md # Skill
   ios/                  # 客户端 / iOS（SwiftUI · ObjC · UIKit）
     swift.md
     objc.md
   backend/              # API、数据、消息、服务
     backend.md          # 长文参考 → Skills / Agent 按需选用
-    api.md database.md …
-  shared/               # 横切质量
-    testing.md security.md …
+    api.md              # API 规范
+    database.md         # 数据库规范
+    grpc.md             # gRPC 规范
+    microservice.md     # 微服务规范
+    mq.md               # 消息队列规范
+    openapi.md          # OpenAPI 规范
+    redis.md            # Redis 规范
+  shared/               # 横切 / 通用
+    testing.md                  # 测试规范（globs: *.{test,spec}.*）
+    security.md                 # 安全规范（globs: *{auth,security,crypto}*）
+    logging.md                  # 日志规范（globs: *log*）
+    performance.md              # 性能优化规范（按需）
+    codex-reconnect-diagnosis.md  # Skill：Codex/Claude Desktop Reconnecting 排查
+    sync-new-skill-to-ai-rules.md  # 工作流：新增 Skill 同步到 ai_rules
   ops/                  # 交付 / 运行时
     docker.md
 
 claude/
   CLAUDE.md             # 仅 @common/core.md
   rules/                # 路径触发 → 安装为 .claude/rules/
-  skills/backend/       # 长文 backend 的按需 Skill
+  skills/               # 按需 Skill（SKILL.md 引入 common 正文）
 
 codex/
   AGENTS.md             # 符号链接 → common/core.md
