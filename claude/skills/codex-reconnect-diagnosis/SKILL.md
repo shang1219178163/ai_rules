@@ -1,0 +1,5 @@
+---
+name: codex-reconnect-diagnosis
+description: 排查 Codex/Claude Desktop 一直 Reconnecting 或模型请求失败的问题：检测 CC-Switch 本地代理与科学上网代理端口，定位转发链路故障，写入 ~/.codex/.env 代理配置。
+---
+@../../../common/shared/codex-reconnect-diagnosis.md

@@ -14,7 +14,7 @@ Personal AI rules for multi-project sharing across Claude Code, Codex, and Curso
 
 ```text
 common/                 # Single source of truth (rule bodies)
-  core.md               # Always-on: 中文、禁止自动 git commit
+  core.md               # Always-on: 中文、禁止自动 git commit、精简保留中文注释
   flutter/              # Client / Flutter stack
     flutter.md
   ios/                  # Client / iOS (SwiftUI · ObjC · UIKit)
@@ -109,7 +109,7 @@ The script rebuilds `claude/`, `codex/`, and `cursor/rules/` from `common/` fron
 
 ```text
 common/                 # 唯一正文（规则内容）
-  core.md               # 始终加载：中文回复、禁止自动 git commit
+  core.md               # 始终加载：中文回复、禁止自动 git commit、精简保留中文注释
   flutter/              # 客户端 / Flutter
     flutter.md
   ios/                  # 客户端 / iOS（SwiftUI · ObjC · UIKit）

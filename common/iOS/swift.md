@@ -161,7 +161,7 @@ paths:
 ## 质量门禁
 
 - 所有方法 / 函数都要有中文注释；复杂逻辑与非显而易见的决策写清注释。
-- 代码审查或精简时不要删除代码注释。
+- 代码审查或精简时不要删除代码注释（全局强制约定见 `common/core.md` 第 0 条）。
 - 新增较大模块或架构相关改动时，交付前做一次自审并按结果修改；小改动以编译 / 分析通过为准。
 - 新增可测逻辑时补充或更新测试（XCTest / Swift Testing）；优先覆盖 ViewModel/Repository/Service 等非 UI 层（通则见 `shared/testing.md`）。
 - 改完相关 Swift 文件后尽量编译通过（Xcode / `xcodebuild`）；有并发、隔离、弃用 API 警告时优先修再结束。

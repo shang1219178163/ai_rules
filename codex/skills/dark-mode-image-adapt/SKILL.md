@@ -1,0 +1,1 @@
+../../../common/flutter/dark-mode-image-adapt.md
