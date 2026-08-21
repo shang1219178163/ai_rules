@@ -1,5 +1,5 @@
 ---
-description: >-
+description: Use when editing existing files, using Write on a file that already exists, fixing compile errors in files the user did not name, or when the user is also editing (手动修改、本地改动、不要覆盖、整文件覆盖、Write 覆盖). Prevents the agent from clobbering unsaved or in-progress user edits.
 alwaysApply: false
 ---
 

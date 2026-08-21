@@ -1,0 +1,1 @@
+../../../common/flutter/fix-flutter-sdk-path.md

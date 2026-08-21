@@ -40,27 +40,49 @@ def parse_frontmatter(text: str) -> tuple[dict, str]:
     body = text[end + 4 :].lstrip("\n")
     meta: dict = {}
     current_list_key: str | None = None
-    for line in raw.splitlines():
+    lines = raw.splitlines()
+    i = 0
+    while i < len(lines):
+        line = lines[i]
         if not line.strip() or line.strip().startswith("#"):
+            i += 1
             continue
         list_item = re.match(r"^\s*-\s+(.*)$", line)
         if list_item and current_list_key:
             val = list_item.group(1).strip().strip('"').strip("'")
             meta.setdefault(current_list_key, []).append(val)
+            i += 1
             continue
         m = re.match(r"^([A-Za-z0-9_]+):\s*(.*)$", line)
         if not m:
+            i += 1
             continue
         key, val = m.group(1), m.group(2).strip()
         if val == "":
             current_list_key = key
             meta[key] = []
+            i += 1
             continue
         current_list_key = None
+        if val in (">", ">-", "|", "|-"):
+            parts: list[str] = []
+            j = i + 1
+            while j < len(lines):
+                nxt = lines[j]
+                if not nxt.strip() or nxt.startswith((" ", "\t")):
+                    if nxt.strip():
+                        parts.append(nxt.strip())
+                    j += 1
+                    continue
+                break
+            meta[key] = "\n".join(parts) if val in ("|", "|-") else " ".join(parts)
+            i = j
+            continue
         if val.lower() in ("true", "false"):
             meta[key] = val.lower() == "true"
         else:
             meta[key] = val.strip('"').strip("'")
+        i += 1
     return meta, body
 
 

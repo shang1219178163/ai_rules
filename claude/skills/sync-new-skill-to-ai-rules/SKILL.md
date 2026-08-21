@@ -1,5 +1,5 @@
 ---
 name: sync-new-skill-to-ai-rules
-description: >-
+description: Use when creating a new Cursor/Claude/Codex skill, writing SKILL.md, or the user says 生成 skill / 新增 skill / 同步到 ai_rules. Always copy the new skill into the ai_rules repo.
 ---
 @../../../common/shared/sync-new-skill-to-ai-rules.md

@@ -1,0 +1,5 @@
+---
+name: fix-flutter-sdk-path
+description: Use when Cursor / VS Code 打开 Flutter 项目提示 Flutter SDK 路径不对、dart.flutterSdkPath 配置错误、.fvm/flutter_sdk 软链接失效、fvm SDK 版本不存在. 统一修复为 /Users/shang/fvm/default.
+---
+@../../../common/flutter/fix-flutter-sdk-path.md
