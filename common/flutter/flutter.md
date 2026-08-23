@@ -44,7 +44,7 @@ paths:
 - 类：PascalCase；变量 / 函数 / 方法：camelCase；文件与目录：underscores_case；环境变量：UPPERCASE。
 - 避免魔法数字，用有意义的常量管理常量值。
 - 函数名以动词开头；布尔用 `isX` / `hasX` / `canX` 等。
-- **事件方法名一律以 `on` 开头**（点击、提交、选中、清除、展开等）：`onTap` / `onSearch` / `onClear` / `onMessageTap`。Widget 回调参数同样用 `onX`，不要用 `handleX` / `executeX` 命名事件。
+- **事件方法名一律以 `on` 开头**（点击、提交、选中、清除、展开等）：`onTap` / `onSearch` / `onClear` / `onMessage`。Widget 回调参数同样用 `onX`，不要用 `handleX` / `executeX` 命名事件。
 - 使用完整单词；允许 API、URL，以及循环 `i`/`j`、`err`、`ctx`、`req`/`res`/`next` 等惯用缩写。
 
 ### 函数
