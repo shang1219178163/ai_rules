@@ -1,0 +1,5 @@
+---
+name: widget-effect-showcase
+description: 把 Flutter 组件 Demo 改成可动态调节全部属性并即时预览的效果展示页。 Use when the user asks 组件效果展示, 动态调整属性, 查看显示效果, playground, property panel, 同样改造 XxxDemo, or to expose all constructor/options of a widget in a demo.
+---
+@../../../common/flutter/widget-effect-showcase.md

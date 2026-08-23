@@ -47,6 +47,7 @@ paths:
 - 方法：Cocoa 语序驼峰（`loadUserWithIdentifier:`），勿写成 `getUser:` 这类含糊命名。
 - 布尔：`is` / `has` / `should` / `can` / `enable`（如 `isLoading`）；忌 `loading`。
 - 常量用项目既有风格（`kXxx`、`static NSString * const`）；状态用 `NS_ENUM` / `NS_OPTIONS`，忌魔法整数。
+- **事件方法名一律以 `on` 开头**（点击、提交、选中、清除、展开等）：`onTap` / `onSearch` / `onClear` / `onMessage`。Widget 回调参数同样用 `onX`，不要用 `handleX` / `executeX` 命名事件。
 - 完整单词优先；允许 API、URL、UUID 及 `i`/`j`/`err`/`ctx` 等惯用缩写。
 
 ### 属性与 Nullability

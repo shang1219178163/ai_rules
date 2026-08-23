@@ -1,0 +1,5 @@
+---
+name: uipageviewcontroller-container
+description: iOS 用 UIPageViewController 横向滚动分页集成一批控制器页面（如 AnimationHomeController 集成 AnimationController1~18）。触发：需要把多个 UIViewController 页面用横向滑动分页集成到一个容器、创建 XxxHomeController 分页容器、UIPageViewController 集成子控制器页面。
+---
+@../../../common/iOS/uipageviewcontroller-container.md

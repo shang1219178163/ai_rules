@@ -48,6 +48,7 @@ paths:
 - 类型：UpperCamelCase；变量 / 函数 / 方法：lowerCamelCase；文件与项目既有风格一致（如 `*_ext.swift`）；编译期常量 / 环境变量：UPPERCASE。
 - 避免魔法数字，用有意义的常量或 `enum` 管理。
 - 函数名以动词开头（副作用如 `save` / `load` / `update`）；布尔用 `isX` / `hasX` / `canX` 等。
+- **事件方法名一律以 `on` 开头**（点击、提交、选中、清除、展开等）：`onTap` / `onSearch` / `onClear` / `onMessage`。Widget 回调参数同样用 `onX`，不要用 `handleX` / `executeX` 命名事件。
 - 使用完整单词；允许 API、URL、UUID，以及循环 `i`/`j`、`err`、`ctx` 等惯用缩写。
 - 遵循 Swift API Design Guidelines。
 
