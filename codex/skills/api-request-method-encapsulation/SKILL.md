@@ -1,0 +1,1 @@
+../../../common/flutter/api-request-method-encapsulation.md

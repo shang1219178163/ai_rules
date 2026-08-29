@@ -1,0 +1,6 @@
+---
+description: Use when writing or generating API request methods that fetch and parse models (api请求方法封装、网络请求、模型解析、fromJson、Provider request、BaseRequestAPI、 rootModel). Api 方法名 request()；类顶注释声明解析模型；Provider 去前缀命名； 参数必传跟随 Api；生成一律返回 RootModel；no map_ext；return via result； follow debugPrint null template.
+alwaysApply: false
+---
+
+[api-request-method-encapsulation](mdc:../../common/flutter/api-request-method-encapsulation.md)

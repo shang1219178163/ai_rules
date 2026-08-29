@@ -1,0 +1,7 @@
+---
+description: Use when adding or refactoring boolean switches in Flutter UI (开关、Switch、 SwitchListTile、配置开关、设置项). Prefer SwitchListTile over Row+Switch.
+globs: "**/*.dart"
+alwaysApply: false
+---
+
+[flutter-switch-list-tile](mdc:../../common/flutter/flutter-switch-list-tile.md)

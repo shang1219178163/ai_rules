@@ -1,0 +1,7 @@
+---
+description: Use when writing or generating network request / response model parsing (网络请求、模型解析、fromJson、fetchResult、fetchModels、map_ext). Do not use MapExt helpers from map_ext.dart for request result unwrapping.
+globs: "**/*.dart"
+alwaysApply: false
+---
+
+[flutter-no-map-ext-network-parse](mdc:../../common/flutter/flutter-no-map-ext-network-parse.md)

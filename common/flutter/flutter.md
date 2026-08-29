@@ -75,6 +75,8 @@ paths:
 ## 模块与状态
 
 - **新增模块时参考当前架构设计**：对齐既有目录分层、命名、`page` / `controller` / `widgets` / `model` 等组织方式与依赖方向，不另起一套结构；编码风格参考 `lib/pages` 既有业务页。
+- 网络请求模型解析禁止使用 `map_ext.dart` 的 `fetchResult` / `fetchModels` 等脱壳方法；用 `api.fetch()` + `Model.fromJson`（见 `api-request-method-encapsulation` / `flutter-no-map-ext-network-parse`）。
+- 单接口请求+解析封装模板（`code`/`data` 判断、`debugPrint` 后 `return null`）见 `api-request-method-encapsulation`。
 - 页面 / 模块数据：若有 `controller.dart`，其中仅保存集合类型；其余非集合变量转为方法 / 组件函数本地变量。
 - 常量与文案：一次性、仅当前方法使用的放函数内部；跨方法或可复用的字符串、图片路径等用成员集合 / 变量集中管理，避免魔法散落。
 - 控制器接受方法（动作）作为输入，并更新影响 UI 的状态。
@@ -85,6 +87,7 @@ paths:
 
 ## Widget 与布局
 
+- 布尔开关显示优先 `SwitchListTile`（`title` / `subtitle`），不要手写 `Row` + `Switch`；细节见 `flutter-switch-list-tile`。
 - 拆成更小、更专注的 Widget；避免过深嵌套（可读性、状态与性能）。
 - 需要 `const` 或隔离重建时，优先抽独立 Widget，少用返回 Widget 的私有方法；若仍用私有方法，不以下划线开头（与项目既有风格一致）。
 - 能 `const` 的构造函数尽量 `const`，减少重建。
