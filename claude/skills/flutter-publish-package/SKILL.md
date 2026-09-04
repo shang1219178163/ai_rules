@@ -1,0 +1,5 @@
+---
+name: flutter-publish-package
+description: 将某 X 组件封装成 Flutter 包并发布到 pub.dev。Use when the user asks 发布包, 封装为包, 发布pub, 打tag, 生成Flutter包, 或提供某个组件源码要求作为独立 pub 包发布。完成从创建 package 目录、迁移源码、接入 workspace、建 example、 美化精简代码、补 CHANGELOG/README 到打 tag 的完整流程。推送 tag 后须盯 GitHub Actions 发布 workflow 结果并确认 pub.dev 上线。
+---
+@../../../common/flutter/flutter-publish-package.md

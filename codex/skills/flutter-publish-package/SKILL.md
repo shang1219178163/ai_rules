@@ -1,0 +1,1 @@
+../../../common/flutter/flutter-publish-package.md

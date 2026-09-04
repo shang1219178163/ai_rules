@@ -1,0 +1,6 @@
+---
+description: Flutter 整页高斯模糊背景：用 Container DecorationImage 铺图 + ClipRect/BackdropFilter 模糊 + 半透明遮罩， Scaffold 透明叠内容。Use when implementing 高斯模糊背景, blur background, BackdropFilter page background, frosted/blurred avatar cover background, or LiveEndView-style full-page blur.
+alwaysApply: false
+---
+
+[flutter-blur-background](mdc:../../common/flutter/flutter-blur-background.md)
