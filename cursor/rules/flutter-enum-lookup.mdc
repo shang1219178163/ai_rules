@@ -1,0 +1,7 @@
+---
+description: Use when resolving a Dart/Flutter enum member from one of its properties (枚举根据属性取值反查枚举成员、nameOf、valueOf、label、byName、firstOrNull、 字符串映射到枚举). Given an enum with extra fields, look up the member by value using `values.where(...).firstOrNull`.
+globs: "**/*.dart"
+alwaysApply: false
+---
+
+[flutter-enum-lookup](mdc:../../common/flutter/flutter-enum-lookup.md)
