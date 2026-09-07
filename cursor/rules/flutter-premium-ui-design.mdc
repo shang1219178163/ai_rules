@@ -1,0 +1,6 @@
+---
+description: Flutter 高级感 UI 设计 8 条技巧：卡片留白、克制纯黑、柔和阴影、统一圆角、精简排版层级、 微交互、空状态引导、骨架屏加载。Use when 打造高级感/精致/上档次 Flutter 界面, premium/polished UI, UI 看起来"差点意思"/太粗糙/太像 Demo, design polish, 或写卡片/阴影/圆角/排版/交互/空态/加载态。
+alwaysApply: false
+---
+
+[flutter-premium-ui-design](mdc:../../common/flutter/flutter-premium-ui-design.md)
