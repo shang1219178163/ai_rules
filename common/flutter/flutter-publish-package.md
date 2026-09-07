@@ -70,7 +70,7 @@ alwaysApply: false
        child: ...
      )
      ```
-     内部用 `Slider` 等控件实时调整组件属性；`onChanged` 只写 `setState(() => prop = v)`（遵循「不在 setState 里写逻辑」规则），**预览区效果实时变化**。
+     内部用 `Slider` 等控件实时调整组件属性；`onChanged` 先赋值再 `setState(() {});`（`setState` 回调内禁止写任何代码），**预览区效果实时变化**。
    - 组件所有对外可调参数都应暴露在调参区；若无参数，可只保留上方展示区。
    - 调参区为预览区提供变量；参数变化经 `setState` 直接驱动上方组件重建。
 
