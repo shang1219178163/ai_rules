@@ -1,5 +1,5 @@
 ---
 name: flutter-tech-blog
-description: Flutter/Dart 技术博客撰写规范。基于项目真实源码撰写 Flutter 技术博客（发布到掘金等平台），输出 .md 源文 + HTML 预览页，掘金排版风格。撰写、精简或调整 Flutter 技术博客时使用。
+description: 技术博客撰写规范（Flutter/Dart、Swift/SwiftUI 等各技术栈通用）。基于项目真实源码撰写技术博客（发布到掘金等平台），输出 .md 源文 + HTML 预览页，统一存到 ~/Documents/doc 并在项目内建 .blogs 快捷链接。撰写、精简或调整技术博客时使用。
 ---
 @../../../common/flutter/flutter-tech-blog.md
