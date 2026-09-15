@@ -8,80 +8,69 @@ description: >-
 alwaysApply: false
 ---
 
-# 时间戳影子属性（Swift / Dart）
+# 时间戳影子属性（Swift / Dart 通用）
 
-为 **整型时间戳** 属性生成只读 **字符串影子属性**。规则跨语言一致；下方按语言给完整代码示例。
+为 **整型时间戳** 属性生成只读 **字符串影子属性**，便于 UI / 日志展示。Swift 与 Dart 规则一致；实现形态随语言（宏 / 手写 getter / codegen）。
 
 ## 何时应用
 
-- 时间戳影子属性、`isTimestamp`、`xxxStr`、`createdAtStr`、int → 日期字符串
-- JsonCodable / Freezed / json_serializable / 手写 model
+- 用户提到：时间戳影子属性、`isTimestamp`、`xxxStr`、`createdAtStr`、int → 日期字符串
+- 在 JsonCodable / json_model / Freezed / 手写 model 里为时间戳加展示字段
 
-## 共用规则
+## 铁律（两语言共用）
 
 | 规则 | 约定 |
 | --- | --- |
-| 影子名 | 属性名 + `Str`（`createdAt` → `createdAtStr`） |
-| 影子类型 | 可空字符串（`String?`） |
-| 空值 | 源为 `nil`/`null` 或 `0` → 返回 `nil`/`null` |
-| 10 位 | **秒** |
-| 13 位 | **毫秒** |
-| 其它位数 | 按 **秒** |
-| 展示串 | 日期默认描述的 **前 19 字符**（`yyyy-MM-dd HH:mm:ss`） |
-| JSON | 影子不参与编解码 |
+| 源类型 | 有符号/无符号整数族（`Int` / `int` 等）；可选时允许 `null` |
+| 影子名 | **属性名 + `Str`**（例：`createdAt` → `createdAtStr`） |
+| 影子类型 | **可空字符串**（Swift `String?` / Dart `String?`） |
+| 空值 | 源为 `nil`/`null` **或** `0` → 影子返回 `nil`/`null` |
+| 10 位整数 | **秒** → `Date(timeIntervalSince1970:)` / `DateTime.fromMillisecondsSinceEpoch(ts * 1000)` |
+| 13 位整数 | **毫秒** → 秒 = `ts / 1000`（整数除）后再转日期 |
+| 其它位数 | 按 **秒** 处理（与当前 JsonCodable 一致） |
+| 展示串 | `Date`/`DateTime` 的默认描述字符串的 **前 19 个字符**（形如 `yyyy-MM-dd HH:mm:ss`） |
+| 编解码 | 影子为计算属性，**不参与** JSON encode/decode |
 
-位数 = `abs(ts)` 的十进制位数。
+位数用绝对值的十进制位数判断（例：`1725772800` → 10；`1725772800000` → 13）。
 
----
+## 算法（伪代码）
 
-## Swift 示例
-
-### JsonCodable 标注
-
-```swift
-import Foundation
-import JsonCodable
-
-@Codable
-struct Event {
-    @CodingKey("created_at", isTimestamp: true)
-    let createdAt: Int
-
-    @CodingKey("updated_at", isTimestamp: true)
-    let updatedAt: Int?
-}
-// 宏生成：
-// var createdAtStr: String?  // 0 → nil
-// var updatedAtStr: String?  // nil 或 0 → nil
-```
-
-宏展开宜 **内联** 转换逻辑，避免展开处找不到辅助类型。
-
-### 手写：非可选 Int
-
-```swift
-import Foundation
-
-struct Event {
-    let createdAt: Int
-
-    var createdAtStr: String? {
-        let ts = createdAt
-        guard ts != 0 else { return nil }
-        let v = Int64(ts)
-        let seconds: TimeInterval = String(Swift.abs(v)).count == 13
-            ? TimeInterval(v) / 1000
-            : TimeInterval(v)
-        return String(String(describing: Date(timeIntervalSince1970: seconds)).prefix(19))
-    }
+```text
+fn timestampShadow(ts: Int?) -> String? {
+  if ts == null || ts == 0 { return null }
+  v = abs(ts) as 64-bit
+  seconds = (digitCount(v) == 13) ? (ts / 1000.0) : ts   // 秒为 TimeInterval / 再 *1000 给 Dart ms API
+  dateText = String(describing: Date from unix seconds)     // Dart: DateTime.toString() 同类描述
+  return dateText.prefix(19)
 }
 ```
 
-### 手写：可选 Int?
+Dart 注意：`DateTime.fromMillisecondsSinceEpoch` 要毫秒：
+
+- 10 位：`fromMillisecondsSinceEpoch(ts * 1000)`
+- 13 位：`fromMillisecondsSinceEpoch(ts)`
+- 再 `toString()`（或等价描述）取前 19 字
+
+## Swift
+
+### 标注（JsonCodable）
 
 ```swift
-var updatedAtStr: String? {
-    guard let ts = updatedAt, ts != 0 else { return nil }
+@CodingKey("created_at", isTimestamp: true)
+let createdAt: Int
+// → var createdAtStr: String?
+```
+
+- 宏展开宜 **内联** 转换逻辑，避免展开处找不到辅助类型。
+- 可选 `Int?`：`guard let ts = createdAt, ts != 0 else { return nil }`
+- 非可选：`guard createdAt != 0 else { return nil }`
+
+### 手写等价
+
+```swift
+var createdAtStr: String? {
+    let ts = createdAt
+    guard ts != 0 else { return nil }
     let v = Int64(ts)
     let seconds: TimeInterval = String(Swift.abs(v)).count == 13
         ? TimeInterval(v) / 1000
@@ -90,120 +79,45 @@ var updatedAtStr: String? {
 }
 ```
 
-### 可复用辅助（可选）
+可选源字段时先 `guard let ts = createdAt, ts != 0`。
 
-```swift
-enum TimestampShadow {
-    static func string(from ts: Int?) -> String? {
-        guard let ts, ts != 0 else { return nil }
-        let v = Int64(ts)
-        let seconds: TimeInterval = String(Swift.abs(v)).count == 13
-            ? TimeInterval(v) / 1000
-            : TimeInterval(v)
-        return String(String(describing: Date(timeIntervalSince1970: seconds)).prefix(19))
-    }
-}
+## Dart
 
-// var createdAtStr: String? { TimestampShadow.string(from: createdAt) }
-```
-
----
-
-## Dart 示例
-
-### 手写 model（非空 int）
+### 手写 / codegen 等价
 
 ```dart
-class Event {
-  Event({required this.createdAt});
-
-  final int createdAt;
-
-  String? get createdAtStr {
-    final ts = createdAt;
-    if (ts == 0) return null;
-    final digits = ts.abs().toString().length;
-    final dt = digits == 13
-        ? DateTime.fromMillisecondsSinceEpoch(ts)
-        : DateTime.fromMillisecondsSinceEpoch(ts * 1000);
-    final text = dt.toString();
-    return text.length <= 19 ? text : text.substring(0, 19);
-  }
-}
-```
-
-### 手写 model（可空 int?）
-
-```dart
-class Event {
-  Event({this.updatedAt});
-
-  final int? updatedAt;
-
-  String? get updatedAtStr {
-    final ts = updatedAt;
-    if (ts == null || ts == 0) return null;
-    final digits = ts.abs().toString().length;
-    final dt = digits == 13
-        ? DateTime.fromMillisecondsSinceEpoch(ts)
-        : DateTime.fromMillisecondsSinceEpoch(ts * 1000);
-    final text = dt.toString();
-    return text.length <= 19 ? text : text.substring(0, 19);
-  }
-}
-```
-
-### 可复用辅助（可选）
-
-```dart
-String? timestampShadowString(int? ts) {
+String? get createdAtStr {
+  final ts = createdAt;
   if (ts == null || ts == 0) return null;
-  final digits = ts.abs().toString().length;
-  final dt = digits == 13
+  final abs = ts.abs();
+  final digits = abs.toString().length;
+  final DateTime dt = digits == 13
       ? DateTime.fromMillisecondsSinceEpoch(ts)
       : DateTime.fromMillisecondsSinceEpoch(ts * 1000);
-  final text = dt.toString();
+  final text = dt.toString(); // 通常含 "yyyy-MM-dd HH:mm:ss.sss"
   return text.length <= 19 ? text : text.substring(0, 19);
 }
-
-// String? get createdAtStr => timestampShadowString(createdAt);
 ```
+
+命名与 Swift 对齐：`foo` → `fooStr`。若项目惯用 `foo_str`，仅在用户明确要求时改用 snake_case。
 
 ### Freezed / json_serializable
 
-```dart
-@freezed
-class Event with _$Event {
-  const Event._();
-  const factory Event({
-    @JsonKey(name: 'created_at') required int createdAt,
-    @JsonKey(name: 'updated_at') int? updatedAt,
-  }) = _Event;
+- JSON 只映射整型字段；影子用 **getter**，勿加 `@JsonKey`。
+- 代码生成插件若支持注解（如 `@TimestampShadow`），语义须与上表一致。
 
-  /// 不写 @JsonKey；不参与序列化
-  String? get createdAtStr => timestampShadowString(createdAt);
-  String? get updatedAtStr => timestampShadowString(updatedAt);
+## 实现检查清单
 
-  factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
-}
-```
-
-命名与 Swift 对齐：`foo` → `fooStr`。仅当用户明确要求时再用 `foo_str`。
-
----
-
-## 检查清单
-
-- [ ] 影子名 = 源名 + `Str`
-- [ ] 类型 `String?`
-- [ ] `nil`/`null`/`0` → `nil`/`null`
+- [ ] 影子名 = 源属性名 + `Str`
+- [ ] 类型为可空 `String` / `String?`
+- [ ] `null`/`nil`/`0` → `null`/`nil`
 - [ ] 10 位秒、13 位毫秒
-- [ ] 展示串前 19 字
+- [ ] 展示串长度 19（或源串更短则全长）
 - [ ] 不写入 JSON
-- [ ] Swift 需 Foundation；Dart 用 `DateTime`
+- [ ] 需要 `Foundation`（Swift）或 `dart:core` `DateTime`（Dart）
 
 ## 反例
 
-- 勿把所有 `Int`/`int` 当时间戳（如 `age`、`id`）
-- 勿对影子字段 encode
-- 勿擅自换成固定 `DateFormat`/`intl`，除非用户指定
+- 不要把所有 `Int`/`int` 都当时间戳（如 `age`、`id`）——须标注或约定字段
+- 不要对影子字段做 encode
+- 不要用固定时区格式化替代「描述串前 19 字」，除非用户另行指定 `DateFormat` / `intl`

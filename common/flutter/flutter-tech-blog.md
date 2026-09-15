@@ -31,8 +31,111 @@ alwaysApply: false
   - 建链接后**必须**把 `.blogs` 写进项目 `.gitignore`，避免把指向个人文档目录的链接提交进仓库。
   - 若项目已有同名 `.blogs`，先确认它指向哪里，不要直接覆盖。
   - 该链接是隐藏目录，IDE 需开启「显示隐藏文件」才能看到；`.blogs/blog/` 之类的子目录形式不采用，保持路径统一。
-- HTML 预览页：自包含单文件、内联 CSS，掘金排版风格（深色代码块、蓝色左侧标题条、卡片式白色容器、浅灰背景），移动端自适应。**不要引用任何本地相对资源**（外链 css/js/图片），否则文件迁移后无法渲染。
-- 文末「本文源码参考」：指向**对应项目**的 GitHub 远端仓库 `blob/main/` 下对应文件，用链接列表。Flutter 项目为 `https://github.com/shang1219178163/flutter_templet_project/blob/main/`，其他项目替换为各自的仓库地址。用**绝对 URL**，这样博客换位置后链接依然有效。
+- HTML 预览页：自包含单文件、内联 CSS，掘金排版风格（深色代码块、蓝色左侧标题条、卡片式容器），移动端自适应。**不要引用任何本地相对资源**（外链 css/js/图片），否则文件迁移后无法渲染。
+  - **默认深色模式**：`<html>` 标签上直接写死 `data-theme="dark"`，首屏即为深色（不能只靠 JS 设置，否则会先闪一下浅色）。点击标题可切到浅色。
+  - **深浅主题切换（必做）**：点击页面顶部标题（`h1`）切换深浅主题。用 CSS 变量 + `data-theme` 属性实现，见下方「主题切换实现」。记住用户选择（`localStorage`）—— 有记录时以记录为准，无记录时用默认深色。
+
+## 主题切换实现
+
+用 CSS 变量定义两套配色，`<html data-theme="dark">` 切换。**默认深色**：`data-theme` 直接写在 `<html>` 标签上，由 HTML 解析阶段就生效，避免 JS 执行前的浅色闪烁。以下为实现骨架，按需调整色值，**保持变量名一致**便于跨文章统一。
+
+**1. `<html>` 标签带默认值**
+
+```html
+<html lang="zh-CN" data-theme="dark">
+```
+
+**2. 变量与深色覆盖**
+
+```css
+:root {
+  --brand: #1e80ff;
+  --text: #252933;
+  --text-2: #4e5969;
+  --bg: #f4f5f5;
+  --card: #ffffff;
+  --code-bg: #282c34;      /* 代码块在两套主题下都保持深色 */
+  --code-text: #abb2bf;
+  --border: #e5e6eb;
+  --inline-bg: #f2f3f5;
+  --inline-text: #e64a19;
+}
+
+[data-theme="dark"] {
+  --text: #e8e8e8;
+  --text-2: #a9a9a9;
+  --bg: #17181a;
+  --card: #232427;
+  --border: #35363a;
+  --inline-bg: #35363a;
+  --inline-text: #ff8a65;   /* 深色下提亮，保证对比度 */
+}
+```
+
+所有颜色一律通过 `var(--x)` 引用，**不要在规则里写死色值**，否则深色模式会漏改。
+
+**3. 标题可点击的提示**
+
+```css
+h1 {
+  cursor: pointer;
+  user-select: none;
+  transition: opacity .15s;
+}
+h1:hover { opacity: .7; }                      /* 暗示可点击 */
+h1::after {                                     /* 主题图标，跟随主题变化 */
+  content: "☀️";
+  font-size: 18px;
+  margin-left: 10px;
+  opacity: .55;
+  vertical-align: middle;
+}
+[data-theme="light"] h1::after { content: "🌙"; }
+```
+
+**4. 切换脚本（放 `</body>` 前）**
+
+```html
+<script>
+(function () {
+  var root = document.documentElement;
+  var KEY = 'blog-theme';
+
+  // 默认深色（已在 <html> 上）；仅当用户切换过时才覆盖
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved === 'light' || saved === 'dark') {
+    root.setAttribute('data-theme', saved);
+  }
+
+  var h1 = document.querySelector('h1');
+  if (!h1) return;
+  h1.setAttribute('role', 'button');
+  h1.setAttribute('tabindex', '0');
+  h1.title = '点击切换深浅主题';
+
+  function toggle() {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  }
+
+  h1.addEventListener('click', toggle);
+  h1.addEventListener('keydown', function (e) {   // 键盘可达
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+  });
+})();
+</script>
+```
+
+**要点**：`data-theme="dark"` 写在 `<html>` 标签上，HTML 解析阶段即生效，**首屏无浅色闪烁**；JS 只在用户切换过后才覆盖它。`localStorage` 包在 `try/catch` 里（`file://` 或隐私模式下可能抛错）；挂 `keydown` 让键盘也能切换。
+
+**5. 交付前自检**
+
+- **打开页面即深色**，不出现先亮后暗的闪烁
+- 切换后**代码块**仍清晰可读（深色底 + 浅字，两套主题一致）
+- 行内 `code` 的强调色在深色下不刺眼（用 `--inline-text` 单独控制）
+- 移动端切换正常，标题换行时图标不错位
 
 ## 文章结构（四节固定）
 
