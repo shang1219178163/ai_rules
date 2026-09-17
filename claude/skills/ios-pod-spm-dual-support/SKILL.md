@@ -1,0 +1,5 @@
+---
+name: ios-pod-spm-dual-support
+description: 把已有的 iOS CocoaPods 库改造成同时支持 CocoaPods 与 SPM，两种包管理器共用同一份源码目录、模块名保持一致。覆盖 Package.swift 模板与字段取舍、Swift 6 并发陷阱、libarclite/Xcode 15+ 部署目标报错、SPM tag 解析与安全指纹、发版脚本陷阱及端到端验证。触发：给 pod 库增加 SPM 支持、pod install 报 libarclite、SPM 解析带 tag 的 iOS 库失败、维护双包管理器发版。
+---
+@../../../common/iOS/ios-pod-spm-dual-support.md

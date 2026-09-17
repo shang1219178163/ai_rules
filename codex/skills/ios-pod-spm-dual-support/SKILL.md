@@ -1,0 +1,1 @@
+../../../common/iOS/ios-pod-spm-dual-support.md
