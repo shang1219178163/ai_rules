@@ -1,0 +1,5 @@
+---
+name: yt-dlp-video-download
+description: 用 yt-dlp 通过链接下载 YouTube 等站点的视频/音频。默认下载最佳画质 mp4 视频，支持播放列表批量、字幕下载、封面与元数据嵌入。适用于用户给出视频/播放列表链接要求下载的场景。
+---
+@../../../common/shared/yt-dlp-video-download.md
