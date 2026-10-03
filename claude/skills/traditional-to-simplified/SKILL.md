@@ -1,0 +1,5 @@
+---
+name: traditional-to-simplified
+description: 把文本文件中的繁体中文转成大陆简体。用户说繁转简、繁体转简体、繁體转简体、简体转换时使用。用 OpenCC t2s 整篇转换，并修正「著/着」「凭藉」和表示恢复的「回复」。
+---
+@../../../common/shared/traditional-to-simplified.md
